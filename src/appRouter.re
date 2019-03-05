@@ -17,12 +17,13 @@ let make = _children => {
   didMount: self => {
     let watcherId =
       ReasonReact.Router.watchUrl(url =>
-        switch (url.hash, MyAppStatus.isUserLoggedIn) {
-        | "score" => self.send(ChangePage(Mapper.toPage("score")))
-        | ("register", false) =>
-          self.send(ChangePage(Mapper.toPage("register")))
-        | ("login", false) => self.send(ChangePage(Mapper.toPage("login")))
-        | _ => self.send(ChangePage(Mapper.toPage("login")))
+        switch (url.path, false) {
+        | (["score"], true) => Js.log("")
+        | (["score"], false) => Js.log("")
+        | (["register"], false) =>
+          self.send(ChangePage(Mapper.toPage(url)))
+        | (["login"], false) => self.send(ChangePage(Mapper.toPage(url)))
+        | _ => self.send(ChangePage(Mapper.toPage(url)))
         }
       );
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
@@ -33,6 +34,7 @@ let make = _children => {
        | Login => <Login />
        | Register => <Register />
        | Score => <Score />
+       | CreateTraining => <CreateTraining />
        }}
     </div>,
 };
