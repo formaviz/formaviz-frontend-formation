@@ -1,8 +1,12 @@
 open Mapper;
+open NavBar;
 
 type state = {route: page};
 type action =
   | ChangePage(page);
+
+let styleRouter =
+  ReactDOMRe.Style.make(~backgroundColor="#444444", ~height="100%", ());
 
 let component = ReasonReact.reducerComponent("AppRouter");
 let make = _children => {
@@ -29,7 +33,8 @@ let make = _children => {
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
   render: self =>
-    <div>
+    <div style=styleRouter>
+      <NavBar />
       {switch (self.state.route) {
        | Login => <Login />
        | Register => <Register />
