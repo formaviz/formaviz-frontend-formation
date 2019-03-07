@@ -1,7 +1,8 @@
 type page =
   | Login
   | Register
-  | Score;
+  | Score
+  | ConsultationFormation;
 
 module type Mapper = {
   let toPage: ReasonReact.Router.url => page;
@@ -14,12 +15,14 @@ module Mapper: Mapper = {
     | ["register"] => Register
     | ["login"] => Login
     | ["score"] => Score
-    | _ => Register
+    | ["consult"] => ConsultationFormation
+    | _ => ConsultationFormation
     };
   let toUrl = page =>
     switch (page) {
     | Register => "register"
     | Score => "score"
     | Login => "login"
+    | ConsultationFormation => "consult"
     };
 };
