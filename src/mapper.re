@@ -1,7 +1,10 @@
+
+open SessionUser;
 type page =
   | Login
   | Register
   | Score;
+
 
 module type Mapper = {
   let toPage: ReasonReact.Router.url => page;
@@ -10,12 +13,21 @@ module type Mapper = {
 
 module Mapper: Mapper = {
   let toPage = (url: ReasonReact.Router.url) =>
-    switch (url.path) {
-    | ["register"] => Register
-    | ["login"] => Login
-    | ["score"] => Score
-    | _ => Register
+    switch(SessionUser.isConnected){
+      | false => switch(url.path){
+                  | ["register"] => Register
+                  | ["login"] => Login
+                  | _ => Login
+                }
+      |_ => switch(url.path){
+                  | ["register"] => Register
+                  | ["login"] => Login
+                  | ["score"] => Score
+                  | _ => Score
+                }
     };
+
+
   let toUrl = page =>
     switch (page) {
     | Register => "register"
