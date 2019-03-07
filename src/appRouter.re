@@ -5,8 +5,7 @@ type state = {route: page};
 type action =
   | ChangePage(page);
 
-let styleRouter =
-  ReactDOMRe.Style.make(~backgroundColor="#444444", ~height="100%", ());
+let styleRouter = ReactDOMRe.Style.make(~backgroundColor="#444444", ());
 
 let component = ReasonReact.reducerComponent("AppRouter");
 let make = _children => {
