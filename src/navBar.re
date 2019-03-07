@@ -1,12 +1,5 @@
 open NavBarCss;
 
-type state = {yolo: string};
-
-type action =
-  | GoToLogin
-  | GoToRegister
-  | GoToCreate;
-
 let component = ReasonReact.statelessComponent("navBar");
 
 let make = _children => {
