@@ -9,7 +9,15 @@ let make = _children => {
   render: _self =>
     <nav className="card navbar" style=navBarCss>
       <a className="navbar-brand"> {ReasonReact.string("Formaviz")} </a>
-      <button className="navbar-toggler">
+      <button className="navbar-toggler" style=btnCSS>
+        {ReasonReact.string("test")}
+        <span className="navbar-toggler-icon" />
+      </button>
+      <button className="navbar-toggler" style=btnCSS>
+        {ReasonReact.string("test")}
+        <span className="navbar-toggler-icon" />
+      </button>
+      <button className="navbar-toggler" style=btnCSS>
         {ReasonReact.string("test")}
         <span className="navbar-toggler-icon" />
       </button>

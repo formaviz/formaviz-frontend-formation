@@ -144,7 +144,9 @@ let make = _children => {
               id="pet-select"
               onChange={event =>
                 _self.send(
-                  UpdatePartTimeField(ReactEvent.Form.target(event)##value),
+                  UpdatePartTimeField(
+                    ReactEvent.Form.target(event)##selected,
+                  ),
                 )
               }>
               <option value="">

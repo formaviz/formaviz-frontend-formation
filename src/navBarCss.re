@@ -10,5 +10,8 @@ let navBarCss =
     ~display="flex",
     ~marginBottom="2%",
     ~flexDirection="row",
+    ~justifyContent="end",
     (),
   );
+
+let btnCSS = ReactDOMRe.Style.make(~color="white", ());
