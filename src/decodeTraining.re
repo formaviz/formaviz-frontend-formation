@@ -1,7 +1,7 @@
 open DecodeLevel;
 
 type trainingResponse = {
-  idFormation: int,
+  idFormation: string,
   name: option(string),
   description: option(string),
   admLevel: option(levelResponse),
@@ -17,7 +17,7 @@ type trainingResponse = {
   schoolCity: option(string),
   lowestScore: option(int),
   highestScore: option(int),
-  averageScore: option(int),
+  averageScore: option(float),
 };
 
 type response = {
@@ -29,7 +29,7 @@ type response = {
 
 let decodeProfile = json =>
   Json.Decode.{
-    idFormation: json |> field("idFormation", int),
+    idFormation: json |> field("idFormation", string),
     name: json |> field("name", optional(string)),
     description: json |> field("description", optional(string)),
     admLevel: json |> field("admlevel", optional(DecodeLevel.decodeProfile)),
@@ -45,16 +45,15 @@ let decodeProfile = json =>
     schoolCity: json |> field("schoolCity", optional(string)),
     lowestScore: json |> field("lowestScore", optional(int)),
     highestScore: json |> field("highestScore", optional(int)),
-    averageScore: json |> field("averageScore", optional(int)),
+    averageScore: json |> field("averageScore", optional(float)),
   };
 
 let decodeResponse = json => {
-  let user =
     Json.Decode.{
       success: json |> field("success", bool),
       token: json |> field("token", string),
       profile: json |> field("profile", decodeProfile),
       message: json |> field("message", string),
     };
-  SessionUser.saveUser(user.token);
-};
+}
+
