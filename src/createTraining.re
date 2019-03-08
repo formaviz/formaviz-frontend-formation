@@ -10,7 +10,7 @@ type state = {
   admLevel: string,
   diplomaLevel: string,
   expertise: string,
-  partTime: string,
+  partTime: bool,
   logoPath: string,
   link: string,
   duration: string,
@@ -28,7 +28,7 @@ type action =
   | UpdateNameField(string)
   | UpdateDescriptionField(string)
   | UpdateExpertiseField(string)
-  | UpdatePartTimeField(string)
+  | UpdatePartTimeField(bool)
   | UpdateLogoPath(string)
   | UpdateLinkField(string)
   | UpdateDurationField(string)
@@ -37,6 +37,26 @@ type action =
   | UpdateSchoolPostalCodeField(string)
   | UpdateSchoolCityField(string)
   | CreateTraining;
+
+let select_partTime = (event, self) => {
+  switch (ReactEvent.Form.target(event)##value) {
+  | "true" => self.ReasonReact.send(UpdatePartTimeField(true))
+  | "false" => self.send(UpdatePartTimeField(false))
+  | _ => self.send(UpdatePartTimeField(false))
+  };
+};
+
+let string_of_bool = value => {
+  switch (value) {
+  | true => "true"
+  | false => "false"
+  | _ => ""
+  };
+};
+
+let handleChange = event => {
+  Js.log(ReactEvent.Form.target(event)##value);
+};
 
 let component = ReasonReact.reducerComponent("createTraining");
 
@@ -48,7 +68,7 @@ let make = _children => {
     admLevel: "",
     diplomaLevel: "",
     expertise: "",
-    partTime: "",
+    partTime: false,
     logoPath: "",
     link: "",
     duration: "",
@@ -142,22 +162,12 @@ let make = _children => {
             <select
               className="form-control"
               id="pet-select"
-              onChange={event =>
-                _self.send(
-                  UpdatePartTimeField(
-                    ReactEvent.Form.target(event)##selected,
-                  ),
-                )
-              }>
+              onChange={event => select_partTime(event, _self)}>
               <option value="">
                 {ReasonReact.string("Choix d'une option")}
               </option>
-              <option value={_self.state.partTime}>
-                {ReasonReact.string("Oui")}
-              </option>
-              <option value={_self.state.partTime}>
-                {ReasonReact.string("Non")}
-              </option>
+              <option value="true"> {ReasonReact.string("Oui")} </option>
+              <option value="false"> {ReasonReact.string("Non")} </option>
             </select>
           </div>
           <div className="input-group mb-3">
@@ -279,7 +289,9 @@ let make = _children => {
       </div>
       <label> {ReasonReact.string(_self.state.name)} </label>
       <label> {ReasonReact.string(_self.state.description)} </label>
-      <label> {ReasonReact.string(_self.state.partTime)} </label>
+      <label>
+        {ReasonReact.string(string_of_bool(_self.state.partTime))}
+      </label>
       <label> {ReasonReact.string(_self.state.error)} </label>
     </div>,
 };

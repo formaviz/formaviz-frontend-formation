@@ -2,6 +2,8 @@ open NavBarCss;
 
 let component = ReasonReact.statelessComponent("navBar");
 
+[@bs.module] external logo: string = "./assets/logo.png";
+
 let make = _children => {
   ...component,
   /*initialState: () => {yolo: ""},
@@ -17,21 +19,24 @@ let make = _children => {
       },*/
   render: self =>
     <nav className="card navbar navbar-expand-lg" style=navBarCss>
-      <a className="navbar-brand"> {ReasonReact.string("Formaviz")} </a>
+      <div style=logoContainerCSS>
+        <img src=logo style=logoCSS alt="logo" />
+        {ReasonReact.string("Formaviz")}
+      </div>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav mr-auto">
           <li className="nav-item">
-            <a className="nav-link" href="login">
+            <a className="btn nav-link" style=btnNav href="login">
               {ReasonReact.string("Login")}
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="register">
+            <a className="btn nav-link" style=btnNav href="register">
               {ReasonReact.string("Register")}
             </a>
           </li>
           <li className="nav-item">
-            <a className="nav-link" href="createTraining">
+            <a className="btn nav-link" style=btnNav href="createTraining">
               {ReasonReact.string("create")}
             </a>
           </li>

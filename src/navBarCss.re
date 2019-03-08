@@ -15,3 +15,11 @@ let navBarCss =
   );
 
 let btnCSS = ReactDOMRe.Style.make(~color="white", ());
+
+let logoContainerCSS = ReactDOMRe.Style.make(~height="90px", ());
+
+let logoCSS = ReactDOMRe.Style.make(~height="90px", ~paddingRight="10px", ());
+
+let btnNav = ReactDOMRe.Style.make(~color="white", ());
+
+let btnNavHover = ReactDOMRe.Style.make(~color="#f6c135", ());
