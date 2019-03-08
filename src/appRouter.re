@@ -1,3 +1,4 @@
+
 open Mapper;
 open SessionUser;
 
@@ -20,12 +21,13 @@ let make = _children => {
       ReasonReact.Router.watchUrl(url => self.send(ChangePage(Mapper.toPage(url))));
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
-  render: self =>
+ render: self =>
     <div>
       {switch (self.state.route) {
        | Login => <Login />
        | Register => <Register />
-       | Score => <Score /> 
+       | Score => <Score />
+       | ConsultationFormation => <ConsultationFormation />
        }}
     </div>,
 };

@@ -1,9 +1,11 @@
 
+
 open SessionUser;
 type page =
   | Login
   | Register
-  | Score;
+  | Score
+  | ConsultationFormation
 
 
 module type Mapper = {
@@ -23,7 +25,8 @@ module Mapper: Mapper = {
                   | ["register"] => Register
                   | ["login"] => Login
                   | ["score"] => Score
-                  | _ => Score
+                  | ["consult"] => ConsultationFormation
+                  | _ => ConsultationFormation
                 }
     };
 
@@ -33,5 +36,7 @@ module Mapper: Mapper = {
     | Register => "register"
     | Score => "score"
     | Login => "login"
+    | ConsultationFormation => "consult"
     };
 };
+

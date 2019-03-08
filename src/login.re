@@ -63,12 +63,13 @@ let make = _children => {
             login(state)
             |> then_(result =>
                  switch (result) {
-                 | Some(user) => resolve(self.send(LoggedIn))
+                 | Some(_) => resolve(self.send(LoggedIn))
+                 | None => resolve(self.send(NotLoggedIn("Error : Bad credentials")));
                  }
                )
             |> catch(_err =>
                  Js.Promise.resolve(
-                   self.send(NotLoggedIn("Error : Bad credentials")),
+                   self.send(NotLoggedIn("Error : Bad credentials"))
                  )
                )
             |> ignore
@@ -77,7 +78,6 @@ let make = _children => {
     | LoggedIn =>
       ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
     | NotLoggedIn(error) => ReasonReact.Update({...state, error})
-    | _ => ReasonReact.NoUpdate
     },
   render: _self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
