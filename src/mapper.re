@@ -5,21 +5,23 @@ type page =
 
 module type Mapper = {
   let toPage: ReasonReact.Router.url => page;
-  let toUrl: page => string;
+  let toUrl: page => ReasonReact.Router.url;
 };
 
 module Mapper: Mapper = {
-  let toPage = (url: ReasonReact.Router.url) =>
-    switch (url.path) {
-    | ["register"] => Register
-    | ["login"] => Login
-    | ["score"] => Score
-    | _ => Register
-    };
-  let toUrl = page =>
-    switch (page) {
-    | Register => "register"
-    | Score => "score"
-    | Login => "login"
-    };
+  let toPage: ReasonReact.Router.url => page =
+    url =>
+      switch url.path {
+      | ["register"] => Register
+      | ["login"] => Login
+      | ["score"] => Score
+      | _ => Register
+      };
+  let toUrl: page => ReasonReact.Router.url =
+    page =>
+      switch page {
+      | Register => {path: ["register"], hash: "", search: ""}
+      | Score => {path: ["score"], hash: "", search: ""}
+      | Login => {path: ["login"], hash: "", search: ""}
+      };
 };

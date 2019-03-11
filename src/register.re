@@ -71,7 +71,7 @@ let make = _children => {
     | _ => ReasonReact.NoUpdate
     },
   render: self =>
-    <div className="align-middle mx-auto w-50 p-3 text-center">
+    <div className="align-middle mx-auto w-50 p-3 text-center" style=ReactDOMRe.Style.make(~backgroundImage="url('./assets/education.jpg')",())>
       <form>
         <div className="card-header"> {ReasonReact.string("Register")} </div>
         <div className="card-body">
