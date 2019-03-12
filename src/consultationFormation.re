@@ -1,4 +1,3 @@
-open DecodeLevel;
 open DecodeTraining;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
 let data: string = "training.json";
@@ -20,14 +19,14 @@ type action =
 
 
 
-let component = ReasonReact.reducerComponent("consultationFormation");
+let component = ReasonReact.reducerComponent("consultationFormation",);
 
-let make = _children => {
+let make = (_children,~idFormation) => {
   let getTraining = self => {
   let payload = Js.Dict.empty();
   Js.Promise.(
     Fetch.fetchWithInit(
-      url_dev++data,
+      url_dev++idFormation++".json",
       Fetch.RequestInit.make(
         ~method_=Get,
         ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),

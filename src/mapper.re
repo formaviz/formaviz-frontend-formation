@@ -5,7 +5,8 @@ type page =
   | Login
   | Register
   | Score
-  | ConsultationFormation;
+  | ConsultationFormation(string)
+  | ListeFormation;
 
 
 module type Mapper = {
@@ -18,7 +19,8 @@ module Mapper: Mapper = {
   url => switch(url.path){
       | ["register"] => Register
       | ["login"] => Login
-      | ["consult"] => ConsultationFormation
+      | ["consult",id] => ConsultationFormation(id)
+      | ["liste"] => ListeFormation
       | _ => Register
     };
 
@@ -26,7 +28,8 @@ module Mapper: Mapper = {
     switch (page) {
     | Register => {path: ["register"], hash: "", search: ""}
     | Login => {path: ["login"], hash: "", search: ""}
-    | ConsultationFormation => {path: ["consult"], hash: "", search: ""} 
+    | ConsultationFormation(id) => {path: ["consult",id], hash: "", search: ""} 
+    | ListeFormation => {path: ["liste"], hash: "", search: ""}
     };
 };
 
