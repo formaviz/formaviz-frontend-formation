@@ -17,8 +17,23 @@ let make = _children => {
     | ChangePage(route) => ReasonReact.Update({route: route})
     },
   didMount: self => {
-    let watcherId =
-      ReasonReact.Router.watchUrl(url => self.send(ChangePage(Mapper.toPage(url))));
+    let watcherId = ReasonReact.Router.watchUrl(url => {
+    let (path,_hash,_search) = (
+      url.path,
+      url.hash,
+      url.search
+    );
+    let fallback: ReasonReact.Router.url = {
+      path:["register"],
+      hash:"",
+      search:""
+    };
+    switch(path,isConnected){
+      |(["login"],false) => self.send(ChangePage(Mapper.toPage(url)))
+      |(_,true) => self.send(ChangePage(Mapper.toPage(url)))
+      |(_,false) => self.send(ChangePage(Mapper.toPage(fallback)))
+    };
+    });
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
  render: self =>

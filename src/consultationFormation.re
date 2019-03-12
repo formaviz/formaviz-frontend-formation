@@ -1,7 +1,7 @@
 open DecodeLevel;
 open DecodeTraining;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
-
+let data: string = "training.json";
 let url_dev: string = "http://localhost:8080/";
 
 let initialLevel = {
@@ -27,7 +27,7 @@ let make = _children => {
   let payload = Js.Dict.empty();
   Js.Promise.(
     Fetch.fetchWithInit(
-      "./public/trainings.json",
+      url_dev++data,
       Fetch.RequestInit.make(
         ~method_=Get,
         ~headers=Fetch.HeadersInit.make({"Content-Type": "application/json"}),
@@ -36,8 +36,7 @@ let make = _children => {
     )
     |> Js.Promise.then_(Fetch.Response.json)
     |> Js.Promise.then_(json => json 
-          |> DecodeTraining.decodeResponse
-          |> response => response.profile
+          |> DecodeTraining.decodeProfile
           |> (result => self.ReasonReact.send(Loaded(result)))
           |> resolve
     )
@@ -50,7 +49,7 @@ let make = _children => {
       idFormation: "",
       name: Some(""),
       description: Some(""),
-      admLevel: Some(initialLevel),
+      admLevel: Some([initialLevel]),
       diplomaLevel: initialLevel,
       expertise: Some(""),
       partTime: Some(false),
@@ -96,7 +95,18 @@ let make = _children => {
         {ReasonReact.string("Consultation d'une formation")}
       </div>
       <div className="card-body">
+        <div>
+         <img 
+            src={switch(_self.state.logoPath){
+            |Some(value) => value  
+            |None => ""
+            }}
+            alt="image formation" />
+          </div>
         <div className="input-group mb-3">
+          <label>
+          {ReasonReact.string("Nom de la formation : ")}
+          </label>
           <label>
           {ReasonReact.string(switch(_self.state.name) {
             |Some(value) => value  
@@ -106,6 +116,9 @@ let make = _children => {
           </label>
         </div>
         <div className="input-group mb-3">
+        <label>
+          {ReasonReact.string("Description : ")}
+          </label>
           <label>{ReasonReact.string(switch(_self.state.description){
             |Some(value) => value  
             |None => ""
@@ -114,125 +127,83 @@ let make = _children => {
           </label>
         </div>
         <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={switch(_self.state.expertise){
+        <label>
+          {ReasonReact.string("Nom de la formation : ")}
+          </label>
+          <label>
+          {ReasonReact.string(switch(_self.state.expertise){
             |Some(value) => value  
             |None => ""
-            }}
-            placeholder="Niveau d'expertise"
-          />
+            })}
+          </label>
         </div>
         <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="input-group-text" id="">
-              {ReasonReact.string("Alternance :")}
-            </span>
-          </div>
-          <select className="form-control" id="pet-select">
-            <option value="">
-              {ReasonReact.string("Choix d'une option")}
-            </option>
-            <option value={switch(_self.state.partTime){
+          <label>
+          {ReasonReact.string("Possible en alternance ?  ")}
+          </label>
+          <label>
+          {ReasonReact.string(switch(_self.state.partTime){
             |Some(value) => "true"  
             |None => "true"
-            }}>
-              {ReasonReact.string("Oui")}
-            </option>
-            <option value={switch(_self.state.partTime){
-            |Some(value) => "false"  
-            |None => "false"
-            }}>
-              {ReasonReact.string("Non")}
-            </option>
-          </select>
-        </div>
-        <div className="input-group mb-3">
-          <div className="input-group-prepend">
-            <span className="input-group-text" id="">
-              {ReasonReact.string("Photo de la formation :")}
-            </span>
+            })}
+          </label> 
           </div>
-          <input
-            className="styleInput"
-            type_="file"
-            value={switch(_self.state.logoPath){
+        <div className="input-group mb-3">
+         <label>
+          {ReasonReact.string("Lien du site de l'école : ")}
+          </label>
+          <a href={switch(_self.state.link){
             |Some(value) => value  
             |None => ""
-            }}
-          />
+            }}>{ReasonReact.string(_self.state.schoolName)}</a>
         </div>
         <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={switch(_self.state.link){
+         <label>
+          {ReasonReact.string("Durée de la formation : ")}
+          </label>
+          <label>
+           {ReasonReact.string(_self.state.duration)}
+          </label>
+        </div>
+        <div className="input-group mb-3">
+         <label>
+          {ReasonReact.string("Nom de l'école : ")}
+          </label>
+          <label>
+           {ReasonReact.string(_self.state.schoolName)}
+          </label>
+        </div>
+        <div className="input-group mb-3">
+         <label>
+          {ReasonReact.string("Description de l'école : ")}
+          </label>
+          <label>
+           {ReasonReact.string(switch(_self.state.schoolDescription){
             |Some(value) => value  
             |None => ""
-            }}
-            placeholder="lien du site de l'école"
-          />
+            })}
+          </label>
         </div>
         <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={_self.state.duration}
-            placeholder="Durée de la formation"
-          />
+          <label>
+          {ReasonReact.string("Code postal de la ville de l'école : ")}
+          </label>
+          <label>
+           {ReasonReact.string(_self.state.schoolPostalcode)}
+          </label>
         </div>
         <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={_self.state.schoolName}
-            placeholder="Nom de l'école"
-          />
-        </div>
-        <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={switch(_self.state.schoolDescription){
+        <label>
+          {ReasonReact.string("Nom de la ville de l'école : ")}
+          </label>
+          <label>
+           {ReasonReact.string(switch(_self.state.schoolCity){
             |Some(value) => value  
             |None => ""
-            }}
-            placeholder="Description de l'école"
-          />
-        </div>
-        <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={_self.state.schoolPostalcode}
-            placeholder="Code postale de la ville de l'école"
-          />
-        </div>
-        <div className="input-group mb-3">
-          <input
-            className="form-control"
-            type_="text"
-            value={switch(_self.state.schoolCity){
-            |Some(value) => value  
-            |None => ""
-            }}
-            placeholder="Nom de la ville de l'école"
-          />
+            })}
+          </label>
         </div>
       </div>
-      <label> {ReasonReact.string(switch(_self.state.name){
-            |Some(value) => value  
-            |None => ""
-            })} </label>
-      <label> {ReasonReact.string(switch(_self.state.description){
-            |Some(value) => value  
-            |None => ""
-            })} </label>
-      <label> {ReasonReact.string(switch(_self.state.partTime){
-            |Some(value) => "value " 
-            |None => ""
-            })} </label>
     </div>,
 }
 };
