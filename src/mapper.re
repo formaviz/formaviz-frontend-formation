@@ -20,7 +20,7 @@ module Mapper: Mapper = {
       | ["login"] => Login
       | ["consult", id] => ConsultationFormation(id)
       | ["liste"] => ListeFormation
-      | ["create"] => CreateTraining
+      | ["createTraining"] => CreateTraining
       | _ => Register
       };
 
@@ -35,6 +35,6 @@ module Mapper: Mapper = {
           search: "",
         }
       | ListeFormation => {path: ["liste"], hash: "", search: ""}
-      | CreateTraining => {path: ["create"], hash: "", search: ""}
+      | CreateTraining => {path: ["createTraining"], hash: "", search: ""}
       };
 };

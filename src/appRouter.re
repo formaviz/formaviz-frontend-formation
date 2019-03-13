@@ -37,7 +37,8 @@ let make = _children => {
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
   render: self =>
-    <div>
+    <div style=styleRouter>
+      <NavBar />
       {switch (self.state.route) {
        | Login => <Login />
        | Register => <Register />
@@ -48,4 +49,7 @@ let make = _children => {
        | ListeFormation => <ListeFormation />
        }}
     </div>,
+  /*{if (isConnected) {
+      ReasonReact.createElement(<NavBar />);
+    }}*/
 };
