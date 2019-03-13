@@ -71,7 +71,7 @@ let make = _children => {
     | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
     },
   render: self =>
-    <div className="align-middle mx-auto w-50 p-3 text-center">
+    <div className="card align-middle mx-auto w-50 p-3 text-center">
       <form>
         <div className="card-header"> {ReasonReact.string("Register")} </div>
         <div className="card-body">

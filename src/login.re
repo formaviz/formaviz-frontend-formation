@@ -64,12 +64,15 @@ let make = _children => {
             |> then_(result =>
                  switch (result) {
                  | Some(_) => resolve(self.send(LoggedIn))
-                 | None => resolve(self.send(NotLoggedIn("Error : Bad credentials")));
+                 | None =>
+                   resolve(
+                     self.send(NotLoggedIn("Error : Bad credentials")),
+                   )
                  }
                )
             |> catch(_err =>
                  Js.Promise.resolve(
-                   self.send(NotLoggedIn("Error : Bad credentials"))
+                   self.send(NotLoggedIn("Error : Bad credentials")),
                  )
                )
             |> ignore
