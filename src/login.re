@@ -7,6 +7,7 @@ type state = {
   email: string,
   password: string,
   error: string,
+  isUserConnected: bool,
 };
 
 type action =
@@ -43,7 +44,12 @@ let component = ReasonReact.reducerComponent("login");
 
 let make = _children => {
   ...component,
-  initialState: () => {email: "", password: "", error: ""},
+  initialState: () => {
+    email: "",
+    password: "",
+    error: "",
+    isUserConnected: false,
+  },
   reducer: (action, state) =>
     switch (action) {
     | UpdateEmailField(email) => ReasonReact.Update({...state, email})
@@ -57,7 +63,11 @@ let make = _children => {
             login(state)
             |> then_(result =>
                  switch (result) {
-                 | Some(user) => resolve(self.send(LoggedIn))
+                 | Some(_) => resolve(self.send(LoggedIn))
+                 | None =>
+                   resolve(
+                     self.send(NotLoggedIn("Error : Bad credentials")),
+                   )
                  }
                )
             |> catch(_err =>
@@ -71,7 +81,6 @@ let make = _children => {
     | LoggedIn =>
       ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
     | NotLoggedIn(error) => ReasonReact.Update({...state, error})
-    | _ => ReasonReact.NoUpdate
     },
   render: _self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">

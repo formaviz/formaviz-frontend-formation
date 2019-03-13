@@ -1,4 +1,3 @@
-open SessionUser;
 type userResponse = {
   id: string,
   firstName: string,

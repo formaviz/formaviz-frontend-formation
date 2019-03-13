@@ -1,5 +1,6 @@
 open Mapper;
 open NavBar;
+open SessionUser;
 
 type state = {route: page};
 type action =
@@ -20,26 +21,31 @@ let make = _children => {
     },
   didMount: self => {
     let watcherId =
-      ReasonReact.Router.watchUrl(url =>
-        switch (url.path, false) {
-        | (["score"], true) => Js.log("")
-        | (["score"], false) => Js.log("")
-        | (["register"], false) =>
-          self.send(ChangePage(Mapper.toPage(url)))
+      ReasonReact.Router.watchUrl(url => {
+        let (path, _hash, _search) = (url.path, url.hash, url.search);
+        let fallback: ReasonReact.Router.url = {
+          path: ["register"],
+          hash: "",
+          search: "",
+        };
+        switch (path, isConnected) {
         | (["login"], false) => self.send(ChangePage(Mapper.toPage(url)))
-        | _ => self.send(ChangePage(Mapper.toPage(url)))
-        }
-      );
+        | (_, true) => self.send(ChangePage(Mapper.toPage(url)))
+        | (_, false) => self.send(ChangePage(Mapper.toPage(fallback)))
+        };
+      });
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
   render: self =>
-    <div style=styleRouter>
-      <NavBar />
+    <div>
       {switch (self.state.route) {
        | Login => <Login />
        | Register => <Register />
        | Score => <Score />
        | CreateTraining => <CreateTraining />
+       | ConsultationFormation(idFormation) =>
+         <ConsultationFormation idFormation />
+       | ListeFormation => <ListeFormation />
        }}
     </div>,
 };

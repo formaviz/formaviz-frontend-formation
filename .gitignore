@@ -7,3 +7,4 @@ coverage
 dist
 *.bs.js
 .cache
+package-lock\.json

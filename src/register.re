@@ -1,4 +1,4 @@
-open Decoder;
+
 
 let url_dev: string = "http://localhost:8080/";
 type state = {
@@ -54,7 +54,8 @@ let make = _children => {
             register(state)
             |> then_(result =>
                  switch (result) {
-                 | Some(user) => resolve(self.send(Registered))
+                 | Some(_) => resolve(self.send(Registered))
+                 | None => resolve(self.send(RegisteredFailed("User not registered")))
                  }
                )
             |> catch(_err =>
@@ -68,7 +69,6 @@ let make = _children => {
     | Registered =>
       ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
     | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
-    | _ => ReasonReact.NoUpdate
     },
   render: self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
