@@ -42,7 +42,8 @@ let make = _children => {
        | Login => <Login />
        | Register => <Register />
        | Score => <Score />
-       | ConsultationFormation => <ConsultationFormation />
+       | ConsultationFormation(idFormation) => <ConsultationFormation idFormation/>
+       | ListeFormation => <ListeFormation/>
        }}
     </div>,
 };
