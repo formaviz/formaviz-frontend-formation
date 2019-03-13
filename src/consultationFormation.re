@@ -1,12 +1,9 @@
-<<<<<<< HEAD
-=======
-open DecodeLevel;
->>>>>>> develop
+
 open DecodeTraining;
+
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
 let data: string = "training.json";
 let url_dev: string = "http://localhost:8080/";
-
 let initialLevel = {
   idLevel: 0,
   grade: "",
@@ -93,7 +90,8 @@ let make = (_children,~idFormation) => {
     },
   didMount: self => getTraining(self),
   render: _self =>
-    <div className="card align-middle mx-auto w-50 p-3 text-center">
+  <div>
+   <div className="card align-middle mx-auto w-50 p-3 text-center">
       <div className="card-header">
         {ReasonReact.string("Consultation d'une formation")}
       </div>
@@ -153,7 +151,7 @@ let make = (_children,~idFormation) => {
           </div>
         <div className="input-group mb-3">
          <label>
-          {ReasonReact.string("Lien du site de l'école : ")}
+          {ReasonReact.string({js|Lien du site de l'école :|js})}
           </label>
           <a href={switch(_self.state.link){
             |Some(value) => value  
@@ -162,7 +160,7 @@ let make = (_children,~idFormation) => {
         </div>
         <div className="input-group mb-3">
          <label>
-          {ReasonReact.string("Durée de la formation : ")}
+          {ReasonReact.string({js|Durée de la formation : |js})}
           </label>
           <label>
            {ReasonReact.string(_self.state.duration)}
@@ -196,7 +194,7 @@ let make = (_children,~idFormation) => {
           </label>
         </div>
         <div className="input-group mb-3">
-        <label>
+          <label>
           {ReasonReact.string("Nom de la ville de l'école : ")}
           </label>
           <label>
@@ -207,6 +205,8 @@ let make = (_children,~idFormation) => {
           </label>
         </div>
       </div>
-    </div>,
-}
+    </div>
+    <Notation/>
+  </div>,
+};
 };
