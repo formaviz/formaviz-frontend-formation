@@ -7,7 +7,6 @@ type state = {
   email: string,
   password: string,
   error: string,
-  isUserConnected: bool,
 };
 
 type action =
@@ -44,12 +43,7 @@ let component = ReasonReact.reducerComponent("login");
 
 let make = _children => {
   ...component,
-  initialState: () => {
-    email: "",
-    password: "",
-    error: "",
-    isUserConnected: false,
-  },
+  initialState: () => {email: "", password: "", error: ""},
   reducer: (action, state) =>
     switch (action) {
     | UpdateEmailField(email) => ReasonReact.Update({...state, email})

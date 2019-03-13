@@ -46,12 +46,12 @@ let select_partTime = (event, self) => {
   };
 };
 
+let uploadImg = e => {
+  Js.log(e);
+};
+
 let string_of_bool = value => {
-  switch (value) {
-  | true => "true"
-  | false => "false"
-  | _ => ""
-  };
+  value ? "true" : "false";
 };
 
 let handleChange = event => {
@@ -90,7 +90,8 @@ let make = _children => {
       ReasonReact.Update({...state, expertise})
     | UpdatePartTimeField(partTime) =>
       ReasonReact.Update({...state, partTime})
-    | UpdateLogoPath(logoPath) => ReasonReact.Update({...state, logoPath})
+    | UpdateLogoPath(logoPath) =>
+      ReasonReact.UpdateWithSideEffects(state, self => uploadImg(logoPath))
     | UpdateLinkField(link) => ReasonReact.Update({...state, link})
     | UpdateDurationField(duration) =>
       ReasonReact.Update({...state, duration})
@@ -103,13 +104,12 @@ let make = _children => {
     | UpdateSchoolCityField(schoolCity) =>
       ReasonReact.Update({...state, schoolCity})
     | CreateTraining => ReasonReact.NoUpdate
-    | _ => ReasonReact.NoUpdate
     },
   render: _self =>
-    <div className="card align-middle mx-auto w-50 p-3 text-center">
+    <div className="card align-middle mx-auto w-50 p-3 text-center col-12">
       <form>
         <div className="card-header">
-          {ReasonReact.string("Création d'une formation")}
+          {ReasonReact.string({js|Création d'une formation|js})}
         </div>
         <div className="card-body">
           <div className="input-group mb-3">
@@ -173,13 +173,13 @@ let make = _children => {
           <div className="input-group mb-3">
             <div className="input-group-prepend">
               <span className="input-group-text" id="">
-                {ReasonReact.string("Photo de la formation :")}
+                {ReasonReact.string("Url de la photo :")}
               </span>
             </div>
             <input
-              className="styleInput"
-              type_="file"
-              value={_self.state.logoPath}
+              className="form-control"
+              type_="text"
+              placeholder="http://www.img.test/img"
               onChange={event =>
                 _self.send(
                   UpdateLogoPath(ReactEvent.Form.target(event)##value),
@@ -192,7 +192,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.link}
-              placeholder="lien du site de l'école"
+              placeholder={js|lien du site de l'école|js}
               onChange={event =>
                 _self.send(
                   UpdateLinkField(ReactEvent.Form.target(event)##value),
@@ -205,7 +205,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.duration}
-              placeholder="Durée de la formation"
+              placeholder={js|Durée de la formation|js}
               onChange={event =>
                 _self.send(
                   UpdateDurationField(ReactEvent.Form.target(event)##value),
@@ -218,7 +218,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.schoolName}
-              placeholder="Nom de l'école"
+              placeholder={js|Nom de l'école|js}
               onChange={event =>
                 _self.send(
                   UpdateSchoolNameField(
@@ -233,7 +233,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.schoolDescription}
-              placeholder="Description de l'école"
+              placeholder={js|Description de l'école|js}
               onChange={event =>
                 _self.send(
                   UpdateSchoolDescriptionField(
@@ -248,7 +248,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.schoolPostalCode}
-              placeholder="Code postale de la ville de l'école"
+              placeholder={js|Code postale de la ville de l'école|js}
               onChange={event =>
                 _self.send(
                   UpdateSchoolPostalCodeField(
@@ -263,7 +263,7 @@ let make = _children => {
               className="form-control"
               type_="text"
               value={_self.state.schoolCity}
-              placeholder="Nom de la ville de l'école"
+              placeholder={js|Nom de la ville de l'école|js}
               onChange={event =>
                 _self.send(
                   UpdateSchoolCityField(
