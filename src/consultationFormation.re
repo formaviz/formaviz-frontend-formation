@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+open DecodeLevel;
+>>>>>>> develop
 open DecodeTraining;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
 let data: string = "training.json";
@@ -19,7 +23,7 @@ type action =
 
 
 
-let component = ReasonReact.reducerComponent("consultationFormation",);
+let component = ReasonReact.reducerComponent("consultationFormation");
 
 let make = (_children,~idFormation) => {
   let getTraining = self => {
