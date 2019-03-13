@@ -1,24 +1,24 @@
-const express = require('express');
-const path = require('path');
-const fs = require('fs');
-const compression = require('compression');
-const helmet = require('helmet');
+const express = require("express");
+const path = require("path");
+const fs = require("fs");
+const compression = require("compression");
+const helmet = require("helmet");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
-const DIST = path.join(__dirname, '..', 'dist');
+const DIST = path.join(__dirname, "..", "dist");
 
-app.enable('trust proxy');
+app.enable("trust proxy");
 
 app.use(compression());
-app.disable('x-powered-by');
+app.disable("x-powered-by");
 app.use(
   helmet.hsts({
     // Must be at least 18 weeks to be approved by Google
     maxAge: 10886400,
     // Must be enabled to be approved by Google
     includeSubDomains: true,
-    preload: true,
+    preload: true
   })
 );
 
@@ -30,10 +30,10 @@ app.use(
 // });
 app.use(express.static(DIST));
 
-app.get('*', (req, res) =>
-  fs.createReadStream(path.join(DIST, 'index.html')).pipe(res)
+app.get("*", (req, res) =>
+  fs.createReadStream(path.join(DIST, "index.html")).pipe(res)
 );
 
 app.listen(PORT, () =>
-  process.stdout.write(`Tennis server started on port ${PORT}\n`)
+  process.stdout.write(`Formation server started on port ${PORT}\n`)
 );

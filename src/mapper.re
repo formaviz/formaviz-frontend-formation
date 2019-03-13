@@ -1,25 +1,32 @@
+
+
+open SessionUser;
 type page =
   | Login
   | Register
-  | Score;
+  | Score
+  | ConsultationFormation;
+
 
 module type Mapper = {
   let toPage: ReasonReact.Router.url => page;
-  let toUrl: page => string;
+  let toUrl: page => ReasonReact.Router.url;
 };
 
 module Mapper: Mapper = {
-  let toPage = (url: ReasonReact.Router.url) =>
-    switch (url.path) {
-    | ["register"] => Register
-    | ["login"] => Login
-    | ["score"] => Score
-    | _ => Register
+  let toPage: ReasonReact.Router.url => page = 
+  url => switch(url.path){
+      | ["register"] => Register
+      | ["login"] => Login
+      | ["consult"] => ConsultationFormation
+      | _ => Register
     };
-  let toUrl = page =>
+
+  let toUrl:page => ReasonReact.Router.url = page =>
     switch (page) {
-    | Register => "register"
-    | Score => "score"
-    | Login => "login"
+    | Register => {path: ["register"], hash: "", search: ""}
+    | Login => {path: ["login"], hash: "", search: ""}
+    | ConsultationFormation => {path: ["consult"], hash: "", search: ""} 
     };
 };
+
