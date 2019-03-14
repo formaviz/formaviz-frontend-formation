@@ -42,7 +42,6 @@ let make = _children => {
       {switch (self.state.route) {
        | Login => <Login />
        | Register => <Register />
-       | Score => <Score />
        | CreateTraining => <CreateTraining />
        | ConsultationFormation(idFormation) =>
          <ConsultationFormation idFormation />

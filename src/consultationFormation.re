@@ -57,9 +57,9 @@ let make = (_children, ~idFormation) => {
       highestScore: Some(0),
       averageScore: Some(0.0),
     },
-        reducer: (action, state) =>
+    reducer: (action, _) =>
       switch (action) {
-      | Error(string) => ReasonReact.NoUpdate
+      | Error(_) => ReasonReact.NoUpdate
       | Loaded(result) =>
         ReasonReact.Update({
           idFormation: result.idFormation,
@@ -81,12 +81,12 @@ let make = (_children, ~idFormation) => {
           averageScore: result.averageScore,
         })
       },
-  didMount: self => getTraining(self),
-  render: _self =>
-   <div className="card align-middle mx-auto w-50 p-3 text-center">
-      <div className="card-header">
-        {ReasonReact.string("Consultation d'une formation")}
-      </div>
+    didMount: self => getTraining(self),
+    render: _self =>
+      <div className="card align-middle mx-auto w-50 p-3 text-center">
+        <div className="card-header">
+          {ReasonReact.string("Consultation d'une formation")}
+        </div>
         <div className="card-body">
           <div>
             <img
@@ -139,7 +139,7 @@ let make = (_children, ~idFormation) => {
             <label>
               {ReasonReact.string(
                  switch (_self.state.partTime) {
-                 | Some(value) => "true"
+                 | Some(_) => "true"
                  | None => "true"
                  },
                )}
@@ -164,12 +164,12 @@ let make = (_children, ~idFormation) => {
             <label> {ReasonReact.string(_self.state.duration)} </label>
           </div>
           <div className="input-group mb-3">
-            <label> {ReasonReact.string("Nom de l'école : ")} </label>
+            <label> {ReasonReact.string({js|Nom de l'école : |js})} </label>
             <label> {ReasonReact.string(_self.state.schoolName)} </label>
           </div>
           <div className="input-group mb-3">
             <label>
-              {ReasonReact.string("Description de l'école : ")}
+              {ReasonReact.string({js|Description de l'école : |js})}
             </label>
             <label>
               {ReasonReact.string(
@@ -182,7 +182,9 @@ let make = (_children, ~idFormation) => {
           </div>
           <div className="input-group mb-3">
             <label>
-              {ReasonReact.string("Code postal de la ville de l'école : ")}
+              {ReasonReact.string(
+                 {js|Code postal de la ville de l'école : |js},
+               )}
             </label>
             <label>
               {ReasonReact.string(_self.state.schoolPostalcode)}
@@ -190,7 +192,7 @@ let make = (_children, ~idFormation) => {
           </div>
           <div className="input-group mb-3">
             <label>
-              {ReasonReact.string("Nom de la ville de l'école : ")}
+              {ReasonReact.string({js|Nom de la ville de l'école : |js})}
             </label>
             <label>
               {ReasonReact.string(
@@ -201,63 +203,68 @@ let make = (_children, ~idFormation) => {
                )}
             </label>
           </div>
-        <div className="input-group mb-3">
-         <label>
-          {ReasonReact.string({js|Lien du site de l'école :|js})}
-          </label>
-          <a href={switch(_self.state.link){
-            |Some(value) => value  
-            |None => ""
-            }}>{ReasonReact.string(_self.state.schoolName)}</a>
+          <div className="input-group mb-3">
+            <label>
+              {ReasonReact.string({js|Lien du site de l'école : |js})}
+            </label>
+            <a
+              href={
+                switch (_self.state.link) {
+                | Some(value) => value
+                | None => ""
+                }
+              }>
+              {ReasonReact.string(_self.state.schoolName)}
+            </a>
+          </div>
+          <div className="input-group mb-3">
+            <label>
+              {ReasonReact.string({js|Durée de la formation : |js})}
+            </label>
+            <label> {ReasonReact.string(_self.state.duration)} </label>
+          </div>
+          <div className="input-group mb-3">
+            <label> {ReasonReact.string({js|Nom de l'école : |js})} </label>
+            <label> {ReasonReact.string(_self.state.schoolName)} </label>
+          </div>
+          <div className="input-group mb-3">
+            <label>
+              {ReasonReact.string({js|Description de l'école : |js})}
+            </label>
+            <label>
+              {ReasonReact.string(
+                 switch (_self.state.schoolDescription) {
+                 | Some(value) => value
+                 | None => ""
+                 },
+               )}
+            </label>
+          </div>
+          <div className="input-group mb-3">
+            <label>
+              {ReasonReact.string(
+                 {js|Code postal de la ville de l'école : |js},
+               )}
+            </label>
+            <label>
+              {ReasonReact.string(_self.state.schoolPostalcode)}
+            </label>
+          </div>
+          <div className="input-group mb-3">
+            <label>
+              {ReasonReact.string({js|Nom de la ville de l'école : |js})}
+            </label>
+            <label>
+              {ReasonReact.string(
+                 switch (_self.state.schoolCity) {
+                 | Some(value) => value
+                 | None => ""
+                 },
+               )}
+            </label>
+          </div>
         </div>
-        <div className="input-group mb-3">
-         <label>
-          {ReasonReact.string({js|Durée de la formation : |js})}
-          </label>
-          <label>
-           {ReasonReact.string(_self.state.duration)}
-          </label>
-        </div>
-        <div className="input-group mb-3">
-         <label>
-          {ReasonReact.string("Nom de l'école : ")}
-          </label>
-          <label>
-           {ReasonReact.string(_self.state.schoolName)}
-          </label>
-        </div>
-        <div className="input-group mb-3">
-         <label>
-          {ReasonReact.string("Description de l'école : ")}
-          </label>
-          <label>
-           {ReasonReact.string(switch(_self.state.schoolDescription){
-            |Some(value) => value  
-            |None => ""
-            })}
-          </label>
-        </div>
-        <div className="input-group mb-3">
-          <label>
-          {ReasonReact.string("Code postal de la ville de l'école : ")}
-          </label>
-          <label>
-           {ReasonReact.string(_self.state.schoolPostalcode)}
-          </label>
-        </div>
-        <div className="input-group mb-3">
-          <label>
-          {ReasonReact.string("Nom de la ville de l'école : ")}
-          </label>
-          <label>
-           {ReasonReact.string(switch(_self.state.schoolCity){
-            |Some(value) => value  
-            |None => ""
-            })}
-          </label>
-        </div>
-      </div>
-    <Notation/>
-  </div>,
-};
+        <Notation />
+      </div>,
+  };
 };

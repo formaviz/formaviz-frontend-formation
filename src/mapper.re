@@ -1,8 +1,6 @@
-open SessionUser;
 type page =
   | Login
   | Register
-  | Score
   | ConsultationFormation(string)
   | ListeFormation
   | CreateTraining;

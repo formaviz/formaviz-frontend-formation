@@ -1,4 +1,3 @@
-
 type levelResponse = {
   idLevel: int,
   grade: string,
@@ -26,8 +25,6 @@ type trainingResponse = {
   averageScore: option(float),
 };
 
-
-
 type response = {
   success: option(bool),
   token: option(string),
@@ -47,7 +44,8 @@ let decodeProfile = json =>
     idFormation: json |> field("idFormation", string),
     name: json |> field("name", optional(string)),
     description: json |> optional(field("description", string)),
-    admLevel:  json |> optional(field("admLevel",Json.Decode.list(decodeLevel))),
+    admLevel:
+      json |> optional(field("admLevel", Json.Decode.list(decodeLevel))),
     diplomaLevel: json |> field("diplomaLevel", decodeLevel),
     expertise: json |> optional(field("expertise", string)),
     partTime: json |> optional(field("partTime", bool)),
@@ -63,16 +61,13 @@ let decodeProfile = json =>
     averageScore: json |> optional(field("averageScore", float)),
   };
 
-let decodeTrainings = json => 
-  Json.Decode.list(decodeProfile,json);
-
+let decodeTrainings = json => Json.Decode.list(decodeProfile, json);
 
 let decodeResponse = json => {
-    Json.Decode.{
-      success: json |> optional(field("success", bool)),
-      token: json |> optional(field("token", string)),
-      profile: json |> field("profile", decodeProfile),
-      message: json |> optional(field("message", string)),
-    };
-}
-
+  Json.Decode.{
+    success: json |> optional(field("success", bool)),
+    token: json |> optional(field("token", string)),
+    profile: json |> field("profile", decodeProfile),
+    message: json |> optional(field("message", string)),
+  };
+};
