@@ -1,0 +1,23 @@
+.rating > a {
+  float: left;
+  width: 1em;
+  padding: 0.1em;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 200%;
+  line-height: 1.2;
+  color: #ddd !important;
+}
+
+.rating > a:before {
+  content: "★ ";
+}
+
+.rating > a {
+  color: #f70 !important;
+}
+
+.rating > a:hover {
+  color: #ea0 !important;
+}
