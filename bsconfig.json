@@ -24,7 +24,8 @@
     "bs-fetch",
     "@glennsl/bs-json",
     "bs-react-bootstrap",
-    "@ahrefs/bs-dotenv"
+    "@ahrefs/bs-dotenv",
+    "@justgage/reason-cookie"
   ],
   "bs-dev-dependencies": ["@glennsl/bs-jest"],
   "warnings": {

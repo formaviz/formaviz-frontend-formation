@@ -33,8 +33,9 @@
     "parcel-plugin-static-files-copy": "^2.0.0"
   },
   "dependencies": {
-    "@glennsl/bs-json": "^3.0.0",
     "@ahrefs/bs-dotenv": "^1.0.3",
+    "@glennsl/bs-json": "^3.0.0",
+    "@justgage/reason-cookie": "^0.1.2",
     "bs-fetch": "^0.3.1",
     "bs-react-bootstrap": "^0.1.0",
     "bsb": "0.0.1",
