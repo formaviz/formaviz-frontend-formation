@@ -1,7 +1,8 @@
 {
   "name": "front-formaviz",
   "version": "0.1.0",
-  "sources": [{
+  "sources": [
+    {
       "dir": "src",
       "subdirs": true
     },
@@ -22,7 +23,8 @@
     "reason-react",
     "bs-fetch",
     "@glennsl/bs-json",
-    "bs-react-bootstrap"
+    "bs-react-bootstrap",
+    "@ahrefs/bs-dotenv"
   ],
   "bs-dev-dependencies": ["@glennsl/bs-jest"],
   "warnings": {
