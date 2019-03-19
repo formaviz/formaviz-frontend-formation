@@ -1,5 +1,5 @@
 open DecodeTraining;
-
+open Config;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
 let data: string = "training.json";
 let url_dev: string = "http://localhost:8080/";
@@ -9,7 +9,7 @@ type state = DecodeTraining.trainingResponse;
 
 type action =
   | Error(string)
-  | Loaded(state);
+  | Loaded(DecodeTraining.trainingResponse);
 
 let component = ReasonReact.reducerComponent("consultationFormation");
 
@@ -18,7 +18,7 @@ let make = (_children, ~idFormation) => {
     let payload = Js.Dict.empty();
     Js.Promise.(
       Fetch.fetchWithInit(
-        url_dev ++ idFormation ++ ".json",
+        url_back ++ "/trainings/" ++ idFormation,
         Fetch.RequestInit.make(
           ~method_=Get,
           ~headers=
@@ -29,8 +29,10 @@ let make = (_children, ~idFormation) => {
       |> Js.Promise.then_(Fetch.Response.json)
       |> Js.Promise.then_(json =>
            json
-           |> DecodeTraining.decodeProfile
-           |> (result => self.ReasonReact.send(Loaded(result)))
+           |> DecodeTraining.decodeSingleResponse
+           |> (
+             result => self.ReasonReact.send(Loaded(result.singleTraining))
+           )
            |> resolve
          )
     )
@@ -201,7 +203,11 @@ let make = (_children, ~idFormation) => {
               )
             </label>
             <label>
-              (ReasonReact.string(string_of_int(_self.state.schoolPostalcode)))
+              (
+                ReasonReact.string(
+                  string_of_int(_self.state.schoolPostalcode),
+                )
+              )
             </label>
           </div>
           <div className="input-group mb-3">

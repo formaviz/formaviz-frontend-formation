@@ -33,6 +33,13 @@ type response = {
   trainings: list(trainingType),
   message: option(string),
 };
+
+type singleResponse = {
+  success: option(bool),
+  token: option(string),
+  singleTraining: trainingResponse,
+  message: option(string),
+};
 let decodeLevel = json =>
   Json.Decode.{
     idLevel: json |> field("idLevel", int),
@@ -71,5 +78,13 @@ let decodeResponse = json =>
     success: json |> optional(field("success", bool)),
     token: json |> optional(field("token", string)),
     trainings: json |> field("trainings", Json.Decode.list(decodeTrainings)),
+    message: json |> optional(field("message", string)),
+  };
+
+let decodeSingleResponse = json =>
+  Json.Decode.{
+    success: json |> optional(field("success", bool)),
+    token: json |> optional(field("token", string)),
+    singleTraining: json |> field("training", decodeProfile),
     message: json |> optional(field("message", string)),
   };
