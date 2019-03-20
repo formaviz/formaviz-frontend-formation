@@ -12,6 +12,7 @@ type state = {
   comment: string,
   rate: int,
   listComment: list(Comment.comment),
+  commentDefault: Comment.comment,
 };
 
 let component = ReasonReact.reducerComponent("notation");
@@ -22,7 +23,16 @@ let newComment = state => {
 
 let make = _children => {
   ...component,
-  initialState: () => {comment: "", rate: 0, listComment: []},
+  initialState: () => {
+    comment: "",
+    rate: 0,
+    listComment: [],
+    commentDefault: {
+      idComment: 0,
+      rate: 0,
+      content: "Aucun commentaire.",
+    },
+  },
   reducer: (action, state) =>
     switch (action) {
     | UpdateRate(rate) => ReasonReact.Update({...state, rate})
@@ -43,14 +53,18 @@ let make = _children => {
           <label> {ReasonReact.string("Avis :")} </label>
         </div>
         <div className="card-body">
-          {ReasonReact.array(
-             Array.of_list(
-               List.map(
-                 comment => <RenderComment comment />,
-                 _self.state.listComment,
+          {switch (_self.state.listComment) {
+           | [] => <RenderComment comment={_self.state.commentDefault} />
+           | _ =>
+             ReasonReact.array(
+               Array.of_list(
+                 List.map(
+                   comment => <RenderComment comment />,
+                   _self.state.listComment,
+                 ),
                ),
-             ),
-           )}
+             )
+           }}
         </div>
       </div>
       <div className="card align-middle p-3 text-center">

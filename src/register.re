@@ -1,5 +1,3 @@
-
-
 let url_dev: string = "http://localhost:8080/";
 type state = {
   email: string,
@@ -13,6 +11,8 @@ type action =
   | Register
   | Registered
   | RegisteredFailed(string);
+
+let btnRegisterCss = ReactDOMRe.Style.make(~paddingBottom="20px", ());
 
 let component = ReasonReact.reducerComponent("Register");
 
@@ -55,12 +55,19 @@ let make = _children => {
             |> then_(result =>
                  switch (result) {
                  | Some(_) => resolve(self.send(Registered))
-                 | None => resolve(self.send(RegisteredFailed("User not registered")))
+                 | None =>
+                   resolve(
+                     self.send(
+                       RegisteredFailed("Utilisateur non enregistrer"),
+                     ),
+                   )
                  }
                )
             |> catch(_err =>
                  Js.Promise.resolve(
-                   self.send(RegisteredFailed("User not registered")),
+                   self.send(
+                     RegisteredFailed("Utilisateur non enregistrer"),
+                   ),
                  )
                )
             |> ignore
@@ -73,7 +80,9 @@ let make = _children => {
   render: self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
       <form>
-        <div className="card-header"> {ReasonReact.string("Register")} </div>
+        <div className="card-header">
+          {ReasonReact.string("Enregistrement")}
+        </div>
         <div className="card-body">
           <div className="input-group mb-3">
             <input
@@ -98,22 +107,21 @@ let make = _children => {
                   UpdatePasswordField(ReactEvent.Form.target(event)##value),
                 )
               }
-              placeholder="password"
+              placeholder="Mot de passe"
             />
           </div>
         </div>
       </form>
-      <div className="justify-content-center">
+      <div className="justify-content-center" style=btnRegisterCss>
         <button
           className="btn btn-outline-primary"
           onClick={_ => self.send({Register})}>
           {ReasonReact.string("S'enregistrer")}
         </button>
       </div>
-      <div className="
-          card-footer text-muted">
-        <label> {ReasonReact.string("Deja un compte ?")} </label>
-        <a href="login"> {ReasonReact.string("Se connecter")} </a>
+      <div className="card-footer text-muted">
+        <label> {ReasonReact.string({js|Déjà un compte ?|js})} </label>
+        <a href="login"> {ReasonReact.string(" Se connecter")} </a>
       </div>
       <div> {ReasonReact.string(self.state.error)} </div>
     </div>,

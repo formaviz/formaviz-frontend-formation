@@ -1,0 +1,13 @@
+[{
+    "idLevel": 1,
+    "grade": "BAC+5",
+    "level": 5,
+    "nbECTS": 60,
+    "titre": "Master Miage"
+}, {
+    "idLevel": 2,
+    "grade": "BAC+10",
+    "level": 1,
+    "nbEcts": 120,
+    "titre": "Master Info"
+}]

@@ -61,6 +61,8 @@ let decodeProfile = json =>
     averageScore: json |> optional(field("averageScore", float)),
   };
 
+let decodeLevels = json => Json.Decode.list(decodeLevel, json);
+
 let decodeTrainings = json => Json.Decode.list(decodeProfile, json);
 
 let decodeResponse = json => {

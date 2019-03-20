@@ -37,6 +37,8 @@ let login = state => {
   );
 };
 
+let btnLoginCss = ReactDOMRe.Style.make(~paddingBottom="20px", ());
+
 let component = ReasonReact.reducerComponent("login");
 
 let make = _children => {
@@ -82,7 +84,7 @@ let make = _children => {
   render: _self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
       <form>
-        <div className="card-header"> {ReasonReact.string("Login")} </div>
+        <div className="card-header"> {ReasonReact.string("Connexion")} </div>
         <div className="card-body">
           <div className="input-group mb-3">
             <input
@@ -107,12 +109,12 @@ let make = _children => {
                   UpdatePasswordField(ReactEvent.Form.target(event)##value),
                 )
               }
-              placeholder="password"
+              placeholder="Mot de passe"
             />
           </div>
         </div>
       </form>
-      <div className="justify-content-center">
+      <div className="justify-content-center" style=btnLoginCss>
         <button
           className="btn btn-outline-primary"
           onClick={_ => _self.send({Login})}>
@@ -122,7 +124,7 @@ let make = _children => {
       <div className="
           card-footer text-muted">
         <label> {ReasonReact.string("Pas encore de compte ?")} </label>
-        <a href="register"> {ReasonReact.string("S'inscrire")} </a>
+        <a href="register"> {ReasonReact.string(" S'inscrire")} </a>
       </div>
       <label> {ReasonReact.string(_self.state.error)} </label>
     </div>,
