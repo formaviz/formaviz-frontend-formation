@@ -13,17 +13,27 @@ type action =
 
 type state = {
   ratingResponse: DecodeRating.ratingType,
-  listRating: list(DecodeRating.ratingType),
+  listRating: list(DecodeRating.ratingResponse),
 };
+
+let ratingResp = {
+  idRating: "",
+  comment: "",
+  score: 0,
+  trainingId: "",
+  userOfRating: "",
+};
+
+let ratingInit = {rating: ratingResp};
 
 let component = ReasonReact.reducerComponent("notation");
 
-let make = (_children, ~trainingId) => {
+let make = (_children, ~idFormation) => {
   let getRating = self => {
     let payload = Js.Dict.empty();
     Js.Promise.(
       Fetch.fetchWithInit(
-        Config.url_back ++ "/ratings/" ++ trainingId,
+        Config.url_back ++ "/rates/" ++ idFormation,
         Fetch.RequestInit.make(
           ~method_=Get,
           ~headers=
@@ -43,20 +53,22 @@ let make = (_children, ~trainingId) => {
   };
   {
     ...component,
-    initialState: () => {ratingResponse, listRating: []},
+    initialState: () => {ratingResponse: ratingInit, listRating: []},
     reducer: (action, state) =>
       switch (action) {
-      | UpdateRate(rate) => ReasonReact.Update({...state, ratingResponse})
+      | UpdateRate(score) => ReasonReact.Update({...state, ratingResponse:{rating:{...state.ratingResponse.rating,score}}})
       | UpdateComment(comment) =>
-        ReasonReact.Update({...state, ratingResponse})
+        ReasonReact.Update({...state, ratingResponse:{rating:{...state.ratingResponse.rating, comment}}})
       | SendRate =>
         ReasonReact.Update({
           ...state,
           listRating: [
             {
-              idRating: state.ratingResponse.idRating,
-              score: state.ratingResponse.score,
-              content: state.ratingResponse.comment,
+              idRating: state.ratingResponse.rating.idRating,
+              score: state.ratingResponse.rating.score,
+              comment: state.ratingResponse.rating.comment,
+              trainingId: idFormation,
+              userOfRating:"",
             },
             ...state.listRating,
           ],
@@ -92,7 +104,7 @@ let make = (_children, ~trainingId) => {
                 <input
                   className="form-control"
                   type_="text"
-                  value={_self.state.ratingResponse.comment}
+                  value={_self.state.ratingResponse.rating.comment}
                   onChange={event =>
                     _self.send(
                       UpdateComment(ReactEvent.Form.target(event)##value),
@@ -134,7 +146,8 @@ let make = (_children, ~trainingId) => {
               </a>
               <label>
                 {ReasonReact.string(
-                   string_of_int(_self.state.ratingResponse.score) ++ "/5",
+                   string_of_int(_self.state.ratingResponse.rating.score)
+                   ++ "/5",
                  )}
               </label>
             </div>

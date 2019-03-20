@@ -276,7 +276,7 @@ let make = (_children, ~idFormation) => {
             </div>
           </div>
         </div>
-        <div className="col-md-6"> <Notation /> </div>
+        <div className="col-md-6"> <Notation idFormation/> </div>
       </div>,
   };
 };
