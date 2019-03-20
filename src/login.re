@@ -31,7 +31,9 @@ let login = state => {
     )
     |> then_(Fetch.Response.json)
     |> then_(json =>
-         json |> Decoder.decodeResponse |> (user => Some(user) |> resolve)
+         json
+         |> UserDecoder.decodeUserLogin
+         |> (user => Some(user) |> resolve)
        )
   );
 };
@@ -77,7 +79,7 @@ let make = _children => {
         ),
       )
     | LoggedIn =>
-      ReasonReact.SideEffects((_ => ReasonReact.Router.push("score")))
+      ReasonReact.SideEffects((_ => ReasonReact.Router.push("liste")))
     | NotLoggedIn(error) => ReasonReact.Update({...state, error})
     },
   render: _self =>

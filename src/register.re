@@ -38,7 +38,7 @@ let register = state => {
     )
     |> then_(Fetch.Response.json)
     |> then_(json =>
-         json |> Decoder.decodeResponse |> (user => Some(user) |> resolve)
+         json |> Decoder.decodeProfile |> (user => Some(user) |> resolve)
        )
   );
 };
@@ -86,7 +86,7 @@ let make = _children => {
         ),
       )
     | Registered =>
-      ReasonReact.SideEffects((_ => ReasonReact.Router.push("score")))
+      ReasonReact.SideEffects((_ => ReasonReact.Router.push("login")))
     | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
     },
   render: self =>
