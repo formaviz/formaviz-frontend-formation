@@ -11,7 +11,7 @@ type ratingType = {rating: ratingResponse};
 type response = {
   success: option(bool),
   token: option(string),
-  ratings: list(ratingType),
+  ratings: list(ratingResponse),
   message: option(string),
 };
 
@@ -31,13 +31,12 @@ let decodeRating = json =>
     userOfRating: json |> field("userOfRating", string),
   };
 
-let decodeRatings = json =>
-  Json.Decode.{rating: json |> field("training", decodeRating)};
+let decodeRatings = json => Json.Decode.list(decodeRating, json);
 
 let decodeResponse = json =>
   Json.Decode.{
     success: json |> optional(field("success", bool)),
     token: json |> optional(field("token", string)),
-    ratings: json |> field("ratings", Json.Decode.list(decodeRatings)),
+    ratings: json |> field("ratings", decodeRatings),
     message: json |> optional(field("message", string)),
   };

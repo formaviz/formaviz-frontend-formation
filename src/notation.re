@@ -6,13 +6,13 @@ open Rating;
 "import './notation.css'";
 
 type action =
-  | Loaded(list(DecodeRating.ratingType))
+  | Loaded(list(DecodeRating.ratingResponse))
   | UpdateComment(string)
   | UpdateRate(int)
   | SendRate;
 
 type state = {
-  ratingResponse: DecodeRating.ratingType,
+  ratingResponse: DecodeRating.ratingResponse,
   listRating: list(DecodeRating.ratingResponse),
 };
 
@@ -24,8 +24,6 @@ let ratingResp = {
   userOfRating: "",
 };
 
-let ratingInit = {rating: ratingResp};
-
 let component = ReasonReact.reducerComponent("notation");
 
 let make = (_children, ~idFormation) => {
@@ -33,21 +31,21 @@ let make = (_children, ~idFormation) => {
     let payload = Js.Dict.empty();
     Js.Promise.(
       Fetch.fetchWithInit(
-        Config.url_back ++ "/rates/" ++ idFormation,
+        Config.url_back
+        ++ "/rates?idTraining="
+        ++ "637c7f88-581e-4cc6-8864-988213e10d5d",
         Fetch.RequestInit.make(
           ~method_=Get,
           ~headers=
             Fetch.HeadersInit.make({"Content-Type": "application/json"}),
           (),
-          ~body=
-          Fetch.BodyInit.make("{\"idTraining\":\"637c7f88-581e-4cc6-8864-988213e10d5d\"}"),
         ),
       )
       |> Js.Promise.then_(Fetch.Response.json)
       |> Js.Promise.then_(json =>
            json
-           |> DecodeRating.decodeResponse
-           |> (result => self.ReasonReact.send(Loaded(result.ratings)))
+           |> DecodeRating.decodeRatings
+           |> (result => self.ReasonReact.send(Loaded(result)))
            |> resolve
          )
     )
@@ -55,22 +53,35 @@ let make = (_children, ~idFormation) => {
   };
   {
     ...component,
-    initialState: () => {ratingResponse: ratingInit, listRating: []},
+    initialState: () => {ratingResponse: ratingResp, listRating: []},
     reducer: (action, state) =>
       switch (action) {
-      | UpdateRate(score) => ReasonReact.Update({...state, ratingResponse:{rating:{...state.ratingResponse.rating,score}}})
+      | UpdateRate(score) =>
+        ReasonReact.Update({
+          ...state,
+          ratingResponse: {
+            ...state.ratingResponse,
+            score,
+          },
+        })
       | UpdateComment(comment) =>
-        ReasonReact.Update({...state, ratingResponse:{rating:{...state.ratingResponse.rating, comment}}})
+        ReasonReact.Update({
+          ...state,
+          ratingResponse: {
+            ...state.ratingResponse,
+            comment,
+          },
+        })
       | SendRate =>
         ReasonReact.Update({
           ...state,
           listRating: [
             {
-              idRating: state.ratingResponse.rating.idRating,
-              score: state.ratingResponse.rating.score,
-              comment: state.ratingResponse.rating.comment,
+              idRating: state.ratingResponse.idRating,
+              score: state.ratingResponse.score,
+              comment: state.ratingResponse.comment,
               trainingId: idFormation,
-              userOfRating:"",
+              userOfRating: "",
             },
             ...state.listRating,
           ],
@@ -107,7 +118,7 @@ let make = (_children, ~idFormation) => {
                 <input
                   className="form-control"
                   type_="text"
-                  value={_self.state.ratingResponse.rating.comment}
+                  value={_self.state.ratingResponse.comment}
                   onChange={event =>
                     _self.send(
                       UpdateComment(ReactEvent.Form.target(event)##value),
@@ -149,8 +160,7 @@ let make = (_children, ~idFormation) => {
               </a>
               <label>
                 {ReasonReact.string(
-                   string_of_int(_self.state.ratingResponse.rating.score)
-                   ++ "/5",
+                   string_of_int(_self.state.ratingResponse.score) ++ "/5",
                  )}
               </label>
             </div>
