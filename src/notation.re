@@ -39,6 +39,8 @@ let make = (_children, ~idFormation) => {
           ~headers=
             Fetch.HeadersInit.make({"Content-Type": "application/json"}),
           (),
+          ~body=
+          Fetch.BodyInit.make("{\"idTraining\":\"637c7f88-581e-4cc6-8864-988213e10d5d\"}"),
         ),
       )
       |> Js.Promise.then_(Fetch.Response.json)
@@ -74,6 +76,7 @@ let make = (_children, ~idFormation) => {
           ],
         })
       },
+    didMount: self => getRating(self),
     render: _self =>
       <div>
         <div className="card align-middle p-3 text-center">
