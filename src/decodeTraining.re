@@ -34,6 +34,11 @@ type response = {
   message: option(string),
 };
 
+type levelsResponse = {
+  success: option(bool),
+  levels: list(levelResponse),
+  message: option(string),
+};
 type singleResponse = {
   success: option(bool),
   token: option(string),
@@ -82,6 +87,13 @@ let decodeResponse = json =>
     message: json |> optional(field("message", string)),
   };
 
+let decodeLevelResponse = json =>
+  Json.Decode.{
+    success: json |> optional(field("success", bool)),
+    levels: json |> field("trainings", Json.Decode.list(decodeLevel)),
+    message: json |> optional(field("message", string)),
+  };
+
 let decodeSingleResponse = json =>
   Json.Decode.{
     success: json |> optional(field("success", bool)),
@@ -90,24 +102,115 @@ let decodeSingleResponse = json =>
     message: json |> optional(field("message", string)),
   };
 
+/* let encodeLevel = (level: levelResponse) =>
+     Json.Encode.encoder(id, level.idLevel);
+
+   let encodeLevelList = ([head, ...queue]: list(levelResponse)) =>
+     Json.Encode.list([encodeLevel(head), ...encodeLevelList(queue)]); */
+
 let encodeTraining = (trainingResp: trainingResponse) =>
   Json.Encode.(
-    object_([
-      ("name", string(trainingResp.name)),
-      ("description", string(trainingResp.description)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-      ("comment", string(trainingResp.comment)),
-    ])
+    object_(
+      [],
+        /* (
+             "name",
+             string(
+               switch (trainingResp.name) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "description",
+             string(
+               switch (trainingResp.description) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "admLevel",
+             encodeLevelList(
+               switch (trainingResp.admLevel) {
+               | Some(list) => list
+               },
+             ),
+           ),
+           ("diplomaLevel", int(trainingResp.diplomaLevel)),
+           (
+             "expertise",
+             string(
+               switch (trainingResp.expertise) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "partTime",
+             bool(
+               switch (trainingResp.partTime) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "logoPath",
+             string(
+               switch (trainingResp.logoPath) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "link",
+             string(
+               switch (trainingResp.link) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           ("duration", string(trainingResp.duration)),
+           ("schoolName", string(trainingResp.schoolName)),
+           (
+             "schoolDescription",
+             string(
+               switch (trainingResp.schoolDescription) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           ("schoolPostalcode", string(trainingResp.schoolPostalcode)),
+           (
+             "schoolCity",
+             string(
+               switch (trainingResp.schoolCity) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "lowestScore",
+             int(
+               switch (trainingResp.lowestScore) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "highestScore",
+             int(
+               switch (trainingResp.highestScore) {
+               | Some(value) => value
+               },
+             ),
+           ),
+           (
+             "averageScore",
+             float(
+               switch (trainingResp.averageScore) {
+               | Some(value) => value
+               },
+             ),
+           ), */
+    )
   );
