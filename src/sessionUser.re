@@ -8,3 +8,9 @@ let isConnected =
   | Some(value) => true
   | None => false
   };
+
+let getToken =
+  switch (getUser()) {
+  | Some(value) => value
+  | None => ""
+  };
