@@ -28,7 +28,7 @@ let make = _children => {
           hash: "",
           search: "",
         };
-        switch (path, isConnected) {
+        switch (path, SessionUser.isConnected) {
         | (["login"], false) => self.send(ChangePage(Mapper.toPage(url)))
         | (_, true) => self.send(ChangePage(Mapper.toPage(url)))
         | (_, false) => self.send(ChangePage(Mapper.toPage(fallback)))
@@ -39,14 +39,16 @@ let make = _children => {
   render: self =>
     <div>
       <NavBar />
-      {switch (self.state.route) {
-       | Login => <Login />
-       | Register => <Register />
-       | CreateTraining => <CreateTraining />
-       | ConsultationFormation(idFormation) =>
-         <ConsultationFormation idFormation />
-       | ListeFormation => <ListeFormation />
-       }}
+      (
+        switch (self.state.route) {
+        | Login => <Login />
+        | Register => <Register />
+        | CreateTraining => <CreateTraining />
+        | ConsultationFormation(idFormation) =>
+          <ConsultationFormation idFormation />
+        | ListeFormation => <ListeFormation />
+        }
+      )
     </div>,
   /*{if (isConnected) {
       ReasonReact.createElement(<NavBar />);

@@ -1,3 +1,10 @@
-let isConnected = true;
-let saveUser = value => Dom.Storage.(localStorage |> setItem("ConnectedUser", value));
-let getUser = () => Dom.Storage.(localStorage |> getItem("ConnectedUser"));
+open JustgageReasonCookie;
+
+let saveUser = value => Cookie.setString("jsessionid", value);
+let getUser = () => Cookie.getAsString("jsessionid");
+
+let isConnected =
+  switch (getUser()) {
+  | Some(value) => true
+  | None => false
+  };
