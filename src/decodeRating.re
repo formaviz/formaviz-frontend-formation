@@ -2,15 +2,13 @@ type ratingResponse = {
   idRating: string,
   comment: string,
   score: int,
-  trainingId: string,
-  userOfRating: string,
+  idTraining: string,
 };
 
 type ratingType = {rating: ratingResponse};
 
 type response = {
   success: option(bool),
-  token: option(string),
   ratings: list(ratingResponse),
   message: option(string),
 };
@@ -24,30 +22,34 @@ type singleResponse = {
 
 let decodeRating = json =>
   Json.Decode.{
-    idRating: json |> field("idRating", string),
+    idRating: json |> field("idRate", string),
     comment: json |> field("comment", string),
     score: json |> field("score", int),
-    trainingId: json |> field("trainingId", string),
-    userOfRating: json |> field("userOfRating", string),
+    idTraining: json |> field("idTraining", string),
   };
 
-let decodeRatings = json => Json.Decode.list(decodeRating, json);
+let decodeRatings = json =>
+  Json.Decode.{rating: json |> field("ratings", decodeRating)};
 
 let decodeResponse = json =>
   Json.Decode.{
     success: json |> optional(field("success", bool)),
-    token: json |> optional(field("token", string)),
-    ratings: json |> field("ratings", decodeRatings),
+    ratings: json |> field("ratings", Json.Decode.list(decodeRating)),
     message: json |> optional(field("message", string)),
   };
 
 let encodeRating = (ratingResponse: ratingResponse) =>
   Json.Encode.(
     object_([
-      ("idRating", string(ratingResponse.idRating)),
       ("comment", string(ratingResponse.comment)),
       ("score", int(ratingResponse.score)),
-      ("trainingId", string(ratingResponse.trainingId)),
-      ("userOfRating", string(ratingResponse.userOfRating)),
+      ("idTraining", string(ratingResponse.idTraining)),
     ])
   );
+/*Json.Encode.(
+    object_([
+      ("comment", string(ratingResponse.comment)),
+      ("score", int(ratingResponse.score)),
+      ("idTraining", string(ratingResponse.trainingId)),
+    ])
+  )*/
