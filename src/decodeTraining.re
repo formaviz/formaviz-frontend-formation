@@ -48,6 +48,7 @@ let decodeLevel = json =>
     nbEcts: json |> field("nbEcts", int),
     titre: json |> field("titre", string),
   };
+
 let decodeProfile = json =>
   Json.Decode.{
     idTraining: json |> field("idTraining", string),
@@ -88,3 +89,25 @@ let decodeSingleResponse = json =>
     singleTraining: json |> field("training", decodeProfile),
     message: json |> optional(field("message", string)),
   };
+
+let encodeTraining = (trainingResp: trainingResponse) =>
+  Json.Encode.(
+    object_([
+      ("name", string(trainingResp.name)),
+      ("description", string(trainingResp.description)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+      ("comment", string(trainingResp.comment)),
+    ])
+  );
