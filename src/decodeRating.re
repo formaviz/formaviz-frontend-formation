@@ -40,3 +40,14 @@ let decodeResponse = json =>
     ratings: json |> field("ratings", decodeRatings),
     message: json |> optional(field("message", string)),
   };
+
+let encodeRating = (ratingResponse: ratingResponse) =>
+  Json.Encode.(
+    object_([
+      ("idRating", string(ratingResponse.idRating)),
+      ("comment", string(ratingResponse.comment)),
+      ("score", int(ratingResponse.score)),
+      ("trainingId", string(ratingResponse.trainingId)),
+      ("userOfRating", string(ratingResponse.userOfRating)),
+    ])
+  );
