@@ -1,11 +1,16 @@
+open Config;
 let url_dev: string = "http://localhost:8080/";
 type state = {
+  name: string,
+  lastname: string,
   email: string,
   password: string,
   error: string,
 };
 
 type action =
+  | UpdateNameField(string)
+  | UpdateLastNameField(string)
   | UpdateEmailField(string)
   | UpdatePasswordField(string)
   | Register
@@ -20,9 +25,11 @@ let register = state => {
   let payload = Js.Dict.empty();
   Js.Dict.set(payload, "email", Js.Json.string(state.email));
   Js.Dict.set(payload, "password", Js.Json.string(state.password));
+  Js.Dict.set(payload, "name", Js.Json.string(state.name));
+  Js.Dict.set(payload, "lastname", Js.Json.string(state.lastname));
   Js.Promise.(
     Fetch.fetchWithInit(
-      url_dev ++ "api/v1/users/",
+      url_back ++ "/signup",
       Fetch.RequestInit.make(
         ~method_=Post,
         ~body=
@@ -33,17 +40,26 @@ let register = state => {
     )
     |> then_(Fetch.Response.json)
     |> then_(json =>
-         json |> Decoder.decodeResponse |> (user => Some(user) |> resolve)
+         json |> Decoder.decodeProfile |> (user => Some(user) |> resolve)
        )
   );
 };
 
 let make = _children => {
   ...component,
-  initialState: () => {email: "", password: "", error: ""},
+  initialState: () => {
+    email: "",
+    password: "",
+    name: "",
+    lastname: "",
+    error: "",
+  },
   reducer: (action, state) =>
     switch (action) {
     | UpdateEmailField(email) => ReasonReact.Update({...state, email})
+    | UpdateLastNameField(lastname) =>
+      ReasonReact.Update({...state, lastname})
+    | UpdateNameField(name) => ReasonReact.Update({...state, name})
     | UpdatePasswordField(password) =>
       ReasonReact.Update({...state, password})
     | Register =>
@@ -57,24 +73,20 @@ let make = _children => {
                  | Some(_) => resolve(self.send(Registered))
                  | None =>
                    resolve(
-                     self.send(
-                       RegisteredFailed("Utilisateur non enregistrer"),
-                     ),
+                     self.send(RegisteredFailed("User not registered")),
                    )
                  }
                )
             |> catch(_err =>
                  Js.Promise.resolve(
-                   self.send(
-                     RegisteredFailed("Utilisateur non enregistrer"),
-                   ),
+                   self.send(RegisteredFailed("User not registered")),
                  )
                )
             |> ignore
           ),
       )
     | Registered =>
-      ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("login"))
     | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
     },
   render: self =>
@@ -84,6 +96,32 @@ let make = _children => {
           {ReasonReact.string("Enregistrement")}
         </div>
         <div className="card-body">
+          <div className="input-group mb-3">
+            <input
+              className="form-control"
+              type_="text"
+              value={self.state.lastname}
+              placeholder="Nom"
+              onChange={event =>
+                self.send(
+                  UpdateLastNameField(ReactEvent.Form.target(event)##value),
+                )
+              }
+            />
+          </div>
+          <div className="input-group mb-3">
+            <input
+              className="form-control"
+              type_="text"
+              value={self.state.name}
+              placeholder="Prénom"
+              onChange={event =>
+                self.send(
+                  UpdateNameField(ReactEvent.Form.target(event)##value),
+                )
+              }
+            />
+          </div>
           <div className="input-group mb-3">
             <input
               className="form-control"
@@ -115,7 +153,7 @@ let make = _children => {
       <div className="justify-content-center" style=btnRegisterCss>
         <button
           className="btn btn-outline-primary"
-          onClick={_ => self.send({Register})}>
+          onClick={_ => self.send(Register)}>
           {ReasonReact.string("S'enregistrer")}
         </button>
       </div>

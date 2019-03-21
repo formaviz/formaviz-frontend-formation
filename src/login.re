@@ -1,5 +1,4 @@
-let url_dev: string = "http://localhost:8080/";
-
+open Config;
 type state = {
   email: string,
   password: string,
@@ -21,7 +20,7 @@ let login = state => {
   Js.Dict.set(payload, "email", Js.Json.string(state.email));
   Js.Promise.(
     Fetch.fetchWithInit(
-      url_dev ++ "api/v1/users/login",
+      url_back ++ "/login",
       Fetch.RequestInit.make(
         ~method_=Post,
         ~body=
@@ -32,7 +31,9 @@ let login = state => {
     )
     |> then_(Fetch.Response.json)
     |> then_(json =>
-         json |> Decoder.decodeResponse |> (user => Some(user) |> resolve)
+         json
+         |> UserDecoder.decodeUserLogin
+         |> (user => Some(user) |> resolve)
        )
   );
 };
@@ -78,7 +79,7 @@ let make = _children => {
           ),
       )
     | LoggedIn =>
-      ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("liste"))
     | NotLoggedIn(error) => ReasonReact.Update({...state, error})
     },
   render: _self =>
@@ -117,14 +118,14 @@ let make = _children => {
       <div className="justify-content-center" style=btnLoginCss>
         <button
           className="btn btn-outline-primary"
-          onClick={_ => _self.send({Login})}>
+          onClick={_ => _self.send(Login)}>
           {ReasonReact.string("Connexion")}
         </button>
       </div>
       <div className="
           card-footer text-muted">
         <label> {ReasonReact.string("Pas encore de compte ?")} </label>
-        <a href="register"> {ReasonReact.string(" S'inscrire")} </a>
+        <a href="register"> {ReasonReact.string("S'inscrire")} </a>
       </div>
       <label> {ReasonReact.string(_self.state.error)} </label>
     </div>,

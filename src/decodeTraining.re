@@ -5,30 +5,32 @@ type levelResponse = {
   nbEcts: int,
   titre: string,
 };
+
 type trainingResponse = {
-  idFormation: string,
+  idTraining: string,
   name: option(string),
   description: option(string),
   admLevel: option(list(levelResponse)),
-  diplomaLevel: levelResponse,
+  diplomaLevel: int,
   expertise: option(string),
   partTime: option(bool),
   logoPath: option(string),
   link: option(string),
-  duration: string,
+  duration: int,
   schoolName: string,
   schoolDescription: option(string),
-  schoolPostalcode: string,
+  schoolPostalcode: int,
   schoolCity: option(string),
   lowestScore: option(int),
   highestScore: option(int),
   averageScore: option(float),
 };
+type trainingType = {training: trainingResponse};
 
 type response = {
   success: option(bool),
   token: option(string),
-  profile: trainingResponse,
+  trainings: list(trainingType),
   message: option(string),
 };
 let decodeLevel = json =>
@@ -41,35 +43,33 @@ let decodeLevel = json =>
   };
 let decodeProfile = json =>
   Json.Decode.{
-    idFormation: json |> field("idFormation", string),
+    idTraining: json |> field("idTraining", string),
     name: json |> field("name", optional(string)),
     description: json |> optional(field("description", string)),
     admLevel:
       json |> optional(field("admLevel", Json.Decode.list(decodeLevel))),
-    diplomaLevel: json |> field("diplomaLevel", decodeLevel),
+    diplomaLevel: json |> field("diplomaLevel", int),
     expertise: json |> optional(field("expertise", string)),
     partTime: json |> optional(field("partTime", bool)),
     logoPath: json |> optional(field("logoPath", string)),
     link: json |> optional(field("link", string)),
-    duration: json |> field("duration", string),
+    duration: json |> field("duration", int),
     schoolName: json |> field("schoolName", string),
     schoolDescription: json |> optional(field("schoolDescription", string)),
-    schoolPostalcode: json |> field("schoolPostalCode", string),
+    schoolPostalcode: json |> field("schoolPostalCode", int),
     schoolCity: json |> optional(field("schoolCity", string)),
     lowestScore: json |> optional(field("lowestScore", int)),
     highestScore: json |> optional(field("highestScore", int)),
     averageScore: json |> optional(field("averageScore", float)),
   };
 
-let decodeLevels = json => Json.Decode.list(decodeLevel, json);
+let decodeTrainings = json =>
+  Json.Decode.{training: json |> field("training", decodeProfile)};
 
-let decodeTrainings = json => Json.Decode.list(decodeProfile, json);
-
-let decodeResponse = json => {
+let decodeResponse = json =>
   Json.Decode.{
     success: json |> optional(field("success", bool)),
     token: json |> optional(field("token", string)),
-    profile: json |> field("profile", decodeProfile),
+    trainings: json |> field("trainings", Json.Decode.list(decodeTrainings)),
     message: json |> optional(field("message", string)),
   };
-};

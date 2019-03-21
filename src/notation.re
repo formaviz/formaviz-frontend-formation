@@ -2,6 +2,8 @@ open DecodeRating;
 open Config;
 open Rating;
 
+open SessionUser;
+
 %raw
 "import './notation.css'";
 
@@ -46,7 +48,7 @@ let make = (_children, ~idFormation) => {
           ~headers=
             Fetch.HeadersInit.make({
               "Content-Type": "application/json",
-              "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8MTBkOWZkNmYtZjJiNi00YjJiLTkxMjItZjhjYzBhYTc4NTA4IiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxMzUzNjIsImV4cCI6MTU1MzIyMTc2MiwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.a6yISblTHOeyY1TNVpP1rX8piugJ9QKMYhN9OFCtYxrZcNkr0PU3FynvSD3kkIl89hedkamTen-AgP7DVwoJuRqxtY4w9BGUTfgQlpOd1zMCEhdv8dLc-LWkPeaYPCDa2vjFAxrCEt666lYkKA_OSsDtu_MyRH_uIh0AHn3qZi3KWxlJbsKGtYUzuu2JQ43KRxQtbnUZJQ9em7PFwgfiE_s3tsvHC1p_FFSv2ocMjxviiLEs_tzCToZs2bH2V4IfEayP8AvCJAvo6L21X1lA8LzJqM-wvw_TkUDEXEdQ_99x1ouZIN1OT5L0q92HtxTbBoHxx1UvCJJjM5wBN06J9w",
+              "Authorization": "Bearer " ++ SessionUser.getToken,
             }),
           (),
         ),
@@ -77,7 +79,7 @@ let make = (_children, ~idFormation) => {
           ~headers=
             Fetch.HeadersInit.make({
               "Content-Type": "application/json",
-              "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6IlFVVXlSa1JCUWpJMU5rTTJRVEZFTWpaQ05qSkNNa1k0UmpCRVFUVXlRVEUwUlVGRlJVRTFOZyJ9.eyJpc3MiOiJodHRwczovL2Zvcm1hdml6ei5ldS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8ODQyOGZlMGMtODEzMi00NDM0LWE2ZWItNzI1N2E4OWRmZDBmIiwiYXVkIjpbImh0dHBzOi8vZm9ybWF2aXp6L2FwaS92MiIsImh0dHBzOi8vZm9ybWF2aXp6LmV1LmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1NTMxODk3NTgsImV4cCI6MTU1MzI3NjE1OCwiYXpwIjoiNENoMXl3aUptWjQyc3lBSWR6ald5UHdSa3hobHFPczIiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIGFkZHJlc3MgcGhvbmUiLCJndHkiOiJwYXNzd29yZCIsInBlcm1pc3Npb25zIjpbXX0.BhRFfUxV1ZUY0ZYpJXoHfBJat3eqDqLtPzaNauusdb1Li8e-vgxF0YsuuYX4gEMt6eDuWdQuSPaYlvygDe_1AMY0RooDAgzuqZO0YQ4IVxDEVHcoyHRd6QFoWooMher8Ce0jxV_bh1oP4kcCKtbY2CpKwF10FPEm3IRKYg9SeJ-XEtNWSo4M1rG3cZVmks9atASLa50pzzdMOzI0mTiJ-cwfzphmKJVWLFwmSuodJyw5KCyirQc_w_nS7r8SfdRiSqZKq3j0peHjmp6pmn_76CiVvkUl-m2kvOWJjy-1CK7X_NcbY0a_ATsDPtxrapb73BcJ7jFlwROIMif_QVqf9Q",
+              "Authorization": "Bearer " ++ SessionUser.getToken,
             }),
           (),
         ),
@@ -85,7 +87,7 @@ let make = (_children, ~idFormation) => {
       |> then_(Fetch.Response.json)
       |> then_(json =>
            json
-           |> DecodeRating.decodeResponse
+           |> DecodeRating.decodeResponseSend
            |> (resp => Some(resp) |> resolve)
          )
     );

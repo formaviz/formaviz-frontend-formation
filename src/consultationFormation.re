@@ -42,19 +42,19 @@ let make = (_children, ~idFormation) => {
   {
     ...component,
     initialState: () => {
-      idFormation: "",
+      idTraining: "",
       name: Some(""),
       description: Some(""),
       admLevel: Some([initialLevel]),
-      diplomaLevel: initialLevel,
+      diplomaLevel: 0,
       expertise: Some(""),
       partTime: Some(false),
       logoPath: Some(""),
       link: Some(""),
-      duration: "",
+      duration: 0,
       schoolName: "",
       schoolDescription: Some(""),
-      schoolPostalcode: "",
+      schoolPostalcode: 0,
       schoolCity: Some(""),
       lowestScore: Some(0),
       highestScore: Some(0),
@@ -65,7 +65,7 @@ let make = (_children, ~idFormation) => {
       | Error(_) => ReasonReact.NoUpdate
       | Loaded(result) =>
         ReasonReact.Update({
-          idFormation: result.idFormation,
+          idTraining: result.idTraining,
           name: result.name,
           description: result.description,
           admLevel: result.admLevel,
@@ -86,9 +86,8 @@ let make = (_children, ~idFormation) => {
       },
     didMount: self => getTraining(self),
     render: _self =>
-      <div style=containerConsult className="col-md-12">
-        <div
-          className="card align-middle mx-auto w-50 p-3 text-center col-md-6">
+      <div style=containerConsult>
+        <div className="card align-middle mx-auto w-50 p-3 text-center">
           <div className="card-header">
             {ReasonReact.string("Consultation d'une formation")}
           </div>
@@ -168,7 +167,9 @@ let make = (_children, ~idFormation) => {
               <label>
                 {ReasonReact.string("Durée de la formation : ")}
               </label>
-              <label> {ReasonReact.string(_self.state.duration)} </label>
+              <label>
+                {ReasonReact.string(string_of_int(_self.state.duration))}
+              </label>
             </div>
             <div className="input-group mb-3">
               <label>
@@ -196,7 +197,9 @@ let make = (_children, ~idFormation) => {
                  )}
               </label>
               <label>
-                {ReasonReact.string(_self.state.schoolPostalcode)}
+                {ReasonReact.string(
+                   string_of_int(_self.state.schoolPostalcode),
+                 )}
               </label>
             </div>
             <div className="input-group mb-3">
@@ -230,7 +233,9 @@ let make = (_children, ~idFormation) => {
               <label>
                 {ReasonReact.string({js|Durée de la formation : |js})}
               </label>
-              <label> {ReasonReact.string(_self.state.duration)} </label>
+              <label>
+                {ReasonReact.string(string_of_int(_self.state.duration))}
+              </label>
             </div>
             <div className="input-group mb-3">
               <label>
@@ -258,7 +263,9 @@ let make = (_children, ~idFormation) => {
                  )}
               </label>
               <label>
-                {ReasonReact.string(_self.state.schoolPostalcode)}
+                {ReasonReact.string(
+                   string_of_int(_self.state.schoolPostalcode),
+                 )}
               </label>
             </div>
             <div className="input-group mb-3">
@@ -276,7 +283,7 @@ let make = (_children, ~idFormation) => {
             </div>
           </div>
         </div>
-        <div className="col-md-6"> <Notation idFormation/> </div>
+        <div className="col-md-6"> <Notation idFormation /> </div>
       </div>,
   };
 };

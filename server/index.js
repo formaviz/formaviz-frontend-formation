@@ -6,6 +6,7 @@ const helmet = require("helmet");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+const SERVERURL = process.env.url || "http://localhost:" + PORT;
 const DIST = path.join(__dirname, "..", "dist");
 
 app.enable("trust proxy");
