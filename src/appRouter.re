@@ -1,13 +1,11 @@
 open Mapper;
-open NavBar;
-open SessionUser;
 
 type state = {route: page};
 type action =
   | ChangePage(page);
 
 let styleRouter =
-  ReactDOMRe.Style.make(~backgroundColor="#444444", ~height="100vh", ());
+  ReactDOMRe.Style.make(~background="#444444", ~backgroundSize="cover", ());
 
 let component = ReasonReact.reducerComponent("AppRouter");
 let make = _children => {
@@ -28,7 +26,7 @@ let make = _children => {
           hash: "",
           search: "",
         };
-        switch (path, isConnected) {
+        switch (path, SessionUser.isConnected) {
         | (["login"], false) => self.send(ChangePage(Mapper.toPage(url)))
         | (_, true) => self.send(ChangePage(Mapper.toPage(url)))
         | (_, false) => self.send(ChangePage(Mapper.toPage(fallback)))
@@ -37,18 +35,19 @@ let make = _children => {
     self.onUnmount(() => ReasonReact.Router.unwatchUrl(watcherId));
   },
   render: self =>
-    <div style=styleRouter>
+    <div>
       <NavBar />
-      {switch (self.state.route) {
-       | Login => <Login />
-       | Register => <Register />
-       | CreateTraining => <CreateTraining />
-       | ConsultationFormation(idFormation) =>
-         <ConsultationFormation idFormation />
-       | ListeFormation => <ListeFormation />
-       }}
-    </div>,
-  /*{if (isConnected) {
-      ReasonReact.createElement(<NavBar />);
-    }}*/
+      (
+        switch (self.state.route) {
+        | Login => <Login />
+        | Register => <Register />
+        | CreateTraining => <CreateTraining />
+        | ConsultationFormation(idFormation) =>
+          <ConsultationFormation idFormation />
+        | ListeFormation => <ListeFormation />
+        }
+      )
+    </div> /*{if (isConnected) {
+               ReasonReact.createElement(<NavBar />);
+             }}*/,
 };

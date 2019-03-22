@@ -1,28 +1,26 @@
-
-
-let url_dev: string = "http://localhost:8080/";
+open Config;
 type state = {
   email: string,
   password: string,
   error: string,
+  isUserConnected: bool,
 };
 
 type action =
   | UpdateEmailField(string)
   | UpdatePasswordField(string)
-  | Register
-  | Registered
-  | RegisteredFailed(string);
+  | Login
+  | LoggedIn
+  | NotLoggedIn(string);
 
-let component = ReasonReact.reducerComponent("Register");
-
-let register = state => {
+let login = state => {
   let payload = Js.Dict.empty();
-  Js.Dict.set(payload, "email", Js.Json.string(state.email));
+
   Js.Dict.set(payload, "password", Js.Json.string(state.password));
+  Js.Dict.set(payload, "email", Js.Json.string(state.email));
   Js.Promise.(
     Fetch.fetchWithInit(
-      url_dev ++ "api/v1/users/",
+      url_back ++ "/login",
       Fetch.RequestInit.make(
         ~method_=Post,
         ~body=
@@ -33,56 +31,70 @@ let register = state => {
     )
     |> then_(Fetch.Response.json)
     |> then_(json =>
-         json |> Decoder.decodeResponse |> (user => Some(user) |> resolve)
+         json
+         |> UserDecoder.decodeUserLogin
+         |> (user => Some(user) |> resolve)
        )
   );
 };
 
+let btnLoginCss = ReactDOMRe.Style.make(~paddingBottom="20px", ());
+
+let component = ReasonReact.reducerComponent("login");
+
 let make = _children => {
   ...component,
-  initialState: () => {email: "", password: "", error: ""},
+  initialState: () => {
+    email: "",
+    password: "",
+    error: "",
+    isUserConnected: false,
+  },
   reducer: (action, state) =>
     switch (action) {
     | UpdateEmailField(email) => ReasonReact.Update({...state, email})
     | UpdatePasswordField(password) =>
       ReasonReact.Update({...state, password})
-    | Register =>
+    | Login =>
       ReasonReact.UpdateWithSideEffects(
         state,
         self =>
           Js.Promise.(
-            register(state)
+            login(state)
             |> then_(result =>
                  switch (result) {
-                 | Some(_) => resolve(self.send(Registered))
-                 | None => resolve(self.send(RegisteredFailed("User not registered")))
+                 | Some(_) => resolve(self.send(LoggedIn))
+                 | None =>
+                   resolve(
+                     self.send(NotLoggedIn("Error : Bad credentials")),
+                   )
                  }
                )
             |> catch(_err =>
                  Js.Promise.resolve(
-                   self.send(RegisteredFailed("User not registered")),
+                   self.send(NotLoggedIn("Error : Bad credentials")),
                  )
                )
             |> ignore
           ),
       )
-    | Registered =>
-      ReasonReact.SideEffects(_ => ReasonReact.Router.push("score"))
-    | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
+    | LoggedIn =>
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("liste"))
+    | NotLoggedIn(error) => ReasonReact.Update({...state, error})
     },
-  render: self =>
+  render: _self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
       <form>
-        <div className="card-header"> {ReasonReact.string("Register")} </div>
+        <div className="card-header"> {ReasonReact.string("Connexion")} </div>
         <div className="card-body">
           <div className="input-group mb-3">
             <input
               className="form-control"
               type_="text"
-              value={self.state.email}
+              value={_self.state.email}
               placeholder="Email"
               onChange={event =>
-                self.send(
+                _self.send(
                   UpdateEmailField(ReactEvent.Form.target(event)##value),
                 )
               }
@@ -92,29 +104,29 @@ let make = _children => {
             <input
               className="form-control"
               type_="password"
-              value={self.state.password}
+              value={_self.state.password}
               onChange={event =>
-                self.send(
+                _self.send(
                   UpdatePasswordField(ReactEvent.Form.target(event)##value),
                 )
               }
-              placeholder="password"
+              placeholder="Mot de passe"
             />
           </div>
         </div>
       </form>
-      <div className="justify-content-center">
+      <div className="justify-content-center" style=btnLoginCss>
         <button
           className="btn btn-outline-primary"
-          onClick={_ => self.send({Register})}>
-          {ReasonReact.string("S'enregistrer")}
+          onClick={_ => _self.send(Login)}>
+          {ReasonReact.string("Connexion")}
         </button>
       </div>
       <div className="
           card-footer text-muted">
-        <label> {ReasonReact.string("Deja un compte ?")} </label>
-        <a href="login"> {ReasonReact.string("Se connecter")} </a>
+        <label> {ReasonReact.string("Pas encore de compte ?")} </label>
+        <a href="register"> {ReasonReact.string("S'inscrire")} </a>
       </div>
-      <div> {ReasonReact.string(self.state.error)} </div>
+      <label> {ReasonReact.string(_self.state.error)} </label>
     </div>,
 };
