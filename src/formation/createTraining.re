@@ -7,7 +7,7 @@ let url_dev: string = "http://localhost:8080/";
 type state = {
   name: string,
   description: string,
-  admLevel: list(int),
+  admLevel: option(list(int)),
   diplomaLevel: int,
   expertise: string,
   partTime: bool,
@@ -40,6 +40,7 @@ type action =
   | Loaded(list(DecodeTraining.levelResponse))
   | CreateTraining
   | Created
+  | UpdateAdmLevelField(string)
   | Error(string);
 
 let select_partTime = (event, self) =>
@@ -83,7 +84,11 @@ let make = _children => {
     let payload = Js.Dict.empty();
     Js.Dict.set(payload, "name", Js.Json.string(state.name));
     Js.Dict.set(payload, "description", Js.Json.string(state.description));
-    Js.Dict.set(payload, "admLevel", Js.Json.array([||]));
+    Js.Dict.set(
+      payload,
+      "admLevel",
+      DecodeTraining.encodeListLevel(state.admLevel),
+    );
     Js.Dict.set(
       payload,
       "diplomaLevel",
@@ -151,7 +156,7 @@ let make = _children => {
     initialState: () => {
       name: "",
       description: "",
-      admLevel: [],
+      admLevel: Some([]),
       diplomaLevel: 1,
       expertise: "",
       partTime: false,
@@ -173,6 +178,17 @@ let make = _children => {
       | UpdateNameField(name) => ReasonReact.Update({...state, name})
       | UpdateDescriptionField(description) =>
         ReasonReact.Update({...state, description})
+      | UpdateAdmLevelField(value) =>
+        ReasonReact.Update({
+          ...state,
+          admLevel:
+            Some([
+              int_of_string(value),
+              ...switch (state.admLevel) {
+                 | Some(value) => value
+                 },
+            ]),
+        })
       | UpdateExpertiseField(expertise) =>
         ReasonReact.Update({...state, expertise})
       | UpdatePartTimeField(partTime) =>
@@ -288,7 +304,7 @@ let make = _children => {
                     Array.of_list(
                       List.map(
                         level =>
-                          <option value=level.title>
+                          <option value=(string_of_int(level.idLevel))>
                             (ReasonReact.string(level.title))
                           </option>,
                         _self.state.listLevel,

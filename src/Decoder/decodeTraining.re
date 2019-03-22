@@ -107,3 +107,6 @@ let decodeSingleResponse = json =>
     singleTraining: json |> field("training", decodeProfile),
     message: json |> optional(field("message", string)),
   };
+
+let encodeListLevel = (admLevel: option(list(int))) =>
+  admLevel |> Json.Encode.nullable(Json.Encode.list(Json.Encode.int));
