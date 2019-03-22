@@ -38,7 +38,9 @@ type action =
   | UpdateSchoolPostalCodeField(string)
   | UpdateSchoolCityField(string)
   | Loaded(list(DecodeTraining.levelResponse))
-  | CreateTraining;
+  | CreateTraining
+  | Created
+  | Error(string);
 
 let select_partTime = (event, self) =>
   switch (ReactEvent.Form.target(event)##value) {
@@ -81,7 +83,7 @@ let make = _children => {
     let payload = Js.Dict.empty();
     Js.Dict.set(payload, "name", Js.Json.string(state.name));
     Js.Dict.set(payload, "description", Js.Json.string(state.description));
-    Js.Dict.set(payload, "admLevel", Json.Encode.null);
+    Js.Dict.set(payload, "admLevel", Js.Json.array([||]));
     Js.Dict.set(
       payload,
       "diplomaLevel",
@@ -91,14 +93,23 @@ let make = _children => {
     Js.Dict.set(payload, "partTime", Js.Json.boolean(state.partTime));
     Js.Dict.set(payload, "logoPath", Js.Json.string(state.logoPath));
     Js.Dict.set(payload, "link", Js.Json.string(state.link));
-    Js.Dict.set(payload, "duration", Js.Json.string(state.duration));
-    Js.Dict.set(payload, "schoolName", Js.Json.string(state.schoolName));
     Js.Dict.set(
       payload,
-      "schoolDescription",
-      Js.Json.string(state.schoolDescription),
+      "duration",
+      Json.Encode.int(int_of_string(state.duration)),
     );
-    Js.Dict.set(payload, "schoolCity", Js.Json.string(state.schoolCity));
+    Js.Dict.set(
+      payload,
+      "school",
+      Json.Encode.(
+        object_([
+          ("name", string(state.schoolName)),
+          ("description", string(state.schoolDescription)),
+          ("cp", string(state.schoolPostalCode)),
+          ("city", string(state.schoolCity)),
+        ])
+      ),
+    );
     Js.Dict.set(payload, "lowestScore", Json.Encode.int(state.lowestScore));
     Js.Dict.set(
       payload,
@@ -179,7 +190,40 @@ let make = _children => {
       | UpdateSchoolCityField(schoolCity) =>
         ReasonReact.Update({...state, schoolCity})
       | Loaded(listLevel) => ReasonReact.Update({...state, listLevel})
-      | CreateTraining => ReasonReact.NoUpdate
+      | Created =>
+        ReasonReact.SideEffects((_self => ReasonReact.Router.push("liste")))
+      | Error(value) => ReasonReact.NoUpdate
+      | CreateTraining =>
+        ReasonReact.UpdateWithSideEffects(
+          state,
+          (
+            self =>
+              Js.Promise.(
+                sendTraining(state)
+                |> then_(result =>
+                     switch (result) {
+                     | Some(_) => resolve(self.send(Created))
+                     | None =>
+                       resolve(
+                         self.send(
+                           Error(
+                             "Erreur lors de la création de la formation",
+                           ),
+                         ),
+                       )
+                     }
+                   )
+                |> catch(_err =>
+                     Js.Promise.resolve(
+                       self.send(
+                         Error("Erreur lors de la création de la formation"),
+                       ),
+                     )
+                   )
+                |> ignore
+              )
+          ),
+        )
       },
     didMount: self => getLevel(self),
     render: _self =>

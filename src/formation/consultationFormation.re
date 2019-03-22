@@ -1,6 +1,7 @@
 open DecodeTraining;
 open Config;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
+let styleImg = ReactDOMRe.Style.make(~width="150px", ~height="150px", ());
 let data: string = "training.json";
 let url_dev: string = "http://localhost:8080/";
 
@@ -94,6 +95,7 @@ let make = (_children, ~idFormation) => {
           <div className="card-body">
             <div>
               <img
+                style=styleImg
                 src=(
                   switch (_self.state.logoPath) {
                   | Some(value) => value

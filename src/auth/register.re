@@ -65,86 +65,96 @@ let make = _children => {
     | Register =>
       ReasonReact.UpdateWithSideEffects(
         state,
-        self =>
-          Js.Promise.(
-            register(state)
-            |> then_(result =>
-                 switch (result) {
-                 | Some(_) => resolve(self.send(Registered))
-                 | None =>
-                   resolve(
+        (
+          self =>
+            Js.Promise.(
+              register(state)
+              |> then_(result =>
+                   switch (result) {
+                   | Some(_) => resolve(self.send(Registered))
+                   | None =>
+                     resolve(
+                       self.send(RegisteredFailed("User not registered")),
+                     )
+                   }
+                 )
+              |> catch(_err =>
+                   Js.Promise.resolve(
                      self.send(RegisteredFailed("User not registered")),
                    )
-                 }
-               )
-            |> catch(_err =>
-                 Js.Promise.resolve(
-                   self.send(RegisteredFailed("User not registered")),
                  )
-               )
-            |> ignore
-          ),
+              |> ignore
+            )
+        ),
       )
     | Registered =>
-      ReasonReact.SideEffects(_ => ReasonReact.Router.push("login"))
+      ReasonReact.SideEffects((_ => ReasonReact.Router.push("login")))
     | RegisteredFailed(err) => ReasonReact.Update({...state, error: err})
     },
   render: self =>
     <div className="card align-middle mx-auto w-50 p-3 text-center">
       <form>
         <div className="card-header">
-          {ReasonReact.string("Enregistrement")}
+          (ReasonReact.string("Enregistrement"))
         </div>
         <div className="card-body">
           <div className="input-group mb-3">
             <input
               className="form-control"
               type_="text"
-              value={self.state.lastname}
+              value=self.state.lastname
               placeholder="Nom"
-              onChange={event =>
-                self.send(
-                  UpdateLastNameField(ReactEvent.Form.target(event)##value),
-                )
-              }
+              onChange=(
+                event =>
+                  self.send(
+                    UpdateLastNameField(
+                      ReactEvent.Form.target(event)##value,
+                    ),
+                  )
+              )
             />
           </div>
           <div className="input-group mb-3">
             <input
               className="form-control"
               type_="text"
-              value={self.state.name}
-              placeholder="Prénom"
-              onChange={event =>
-                self.send(
-                  UpdateNameField(ReactEvent.Form.target(event)##value),
-                )
-              }
+              value=self.state.name
+              placeholder={js|Prénom|js}
+              onChange=(
+                event =>
+                  self.send(
+                    UpdateNameField(ReactEvent.Form.target(event)##value),
+                  )
+              )
             />
           </div>
           <div className="input-group mb-3">
             <input
               className="form-control"
               type_="text"
-              value={self.state.email}
+              value=self.state.email
               placeholder="Email"
-              onChange={event =>
-                self.send(
-                  UpdateEmailField(ReactEvent.Form.target(event)##value),
-                )
-              }
+              onChange=(
+                event =>
+                  self.send(
+                    UpdateEmailField(ReactEvent.Form.target(event)##value),
+                  )
+              )
             />
           </div>
           <div className="input-group mb-3">
             <input
               className="form-control"
               type_="password"
-              value={self.state.password}
-              onChange={event =>
-                self.send(
-                  UpdatePasswordField(ReactEvent.Form.target(event)##value),
-                )
-              }
+              value=self.state.password
+              onChange=(
+                event =>
+                  self.send(
+                    UpdatePasswordField(
+                      ReactEvent.Form.target(event)##value,
+                    ),
+                  )
+              )
               placeholder="Mot de passe"
             />
           </div>
@@ -153,14 +163,14 @@ let make = _children => {
       <div className="justify-content-center" style=btnRegisterCss>
         <button
           className="btn btn-outline-primary"
-          onClick={_ => self.send(Register)}>
-          {ReasonReact.string("S'enregistrer")}
+          onClick=(_ => self.send(Register))>
+          (ReasonReact.string("S'enregistrer"))
         </button>
       </div>
       <div className="card-footer text-muted">
-        <label> {ReasonReact.string({js|Déjà un compte ?|js})} </label>
-        <a href="login"> {ReasonReact.string(" Se connecter")} </a>
+        <label> (ReasonReact.string({js|Déjà un compte ?|js})) </label>
+        <a href="login"> (ReasonReact.string(" Se connecter")) </a>
       </div>
-      <div> {ReasonReact.string(self.state.error)} </div>
+      <div> (ReasonReact.string(self.state.error)) </div>
     </div>,
 };
