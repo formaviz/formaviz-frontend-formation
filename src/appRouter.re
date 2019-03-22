@@ -1,6 +1,4 @@
 open Mapper;
-open NavBar;
-open SessionUser;
 
 type state = {route: page};
 type action =
@@ -49,8 +47,7 @@ let make = _children => {
         | ListeFormation => <ListeFormation />
         }
       )
-    </div>,
-  /*{if (isConnected) {
-      ReasonReact.createElement(<NavBar />);
-    }}*/
+    </div> /*{if (isConnected) {
+               ReasonReact.createElement(<NavBar />);
+             }}*/,
 };

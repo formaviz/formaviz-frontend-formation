@@ -3,7 +3,7 @@ open Config;
 let styleInput = ReactDOMRe.Style.make(~paddingLeft="20px");
 let data: string = "trainings.json";
 
-let initialLevel = {idLevel: 0, grade: "", level: 0, nbEcts: 0, titre: ""};
+let initialLevel = {idLevel: 0, grade: "", level: 0, nbECTS: 0, title: ""};
 type state = DecodeTraining.trainingType;
 
 type action =
@@ -16,8 +16,7 @@ type action =
 let component = ReasonReact.reducerComponent("listeFormation");
 
 let make = _children => {
-  let getTrainings = self => {
-    let payload = Js.Dict.empty();
+  let getTrainings = self =>
     Js.Promise.(
       Fetch.fetchWithInit(
         url_back ++ "/trainings",
@@ -37,13 +36,12 @@ let make = _children => {
          )
     )
     |> ignore;
-  };
   {
     ...component,
     initialState: () => Nothing,
     reducer: (action, state) =>
       switch (action) {
-      | Error(string) => ReasonReact.NoUpdate
+      | Error(_) => ReasonReact.NoUpdate
       | Loaded(result) => ReasonReact.Update(Success(result))
       | ToTrainingView(value) =>
         ReasonReact.SideEffects(
@@ -54,11 +52,11 @@ let make = _children => {
     render: _self =>
       switch (_self.state) {
       | Nothing => <div> (ReasonReact.string("Rien à afficher")) </div>
-      | Error(string) =>
+      | Error(_) =>
         <div>
           (ReasonReact.string("Erreur lors du chargement des données"))
         </div>
-      | Loaded(state) =>
+      | Loaded(_) =>
         <div> (ReasonReact.string("Chargement des données en cours")) </div>
       | Success(trainings) =>
         <div className="card align-middle mx-auto w-50 p-3 text-center">

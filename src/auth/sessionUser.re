@@ -5,7 +5,7 @@ let getUser = () => Cookie.getAsString("jsessionid");
 
 let isConnected =
   switch (getUser()) {
-  | Some(value) => true
+  | Some(_) => true
   | None => false
   };
 

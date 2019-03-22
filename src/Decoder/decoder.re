@@ -27,13 +27,10 @@ let decodeProfile = json =>
     deletedAt: json |> optional(field("deletedAt", string)),
     role: json |> field("role", string),
   };
-let decodeResponse = json => {
-  let user =
-    Json.Decode.{
-      success: json |> field("success", bool),
-      token: json |> field("token", string),
-      profile: json |> field("profile", decodeProfile),
-      message: json |> field("message", string),
-    };
-  ();
-};
+let decodeResponse = json =>
+  Json.Decode.{
+    success: json |> field("success", bool),
+    token: json |> field("token", string),
+    profile: json |> field("profile", decodeProfile),
+    message: json |> field("message", string),
+  };
