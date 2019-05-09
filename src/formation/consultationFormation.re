@@ -132,7 +132,7 @@ let make = (_children, ~idFormation) => {
               </label>
             </div>
             <div className="input-group mb-3">
-              <label> (ReasonReact.string("Nom de la formation : ")) </label>
+              <label> (ReasonReact.string("Niveau d'expertise : ")) </label>
               <label>
                 (
                   ReasonReact.string(
@@ -152,8 +152,8 @@ let make = (_children, ~idFormation) => {
                 (
                   ReasonReact.string(
                     switch (_self.state.partTime) {
-                    | Some(_) => "true"
-                    | None => "true"
+                    | Some(_) => "Oui"
+                    | None => "Non"
                     },
                   )
                 )

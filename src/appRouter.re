@@ -22,7 +22,7 @@ let make = _children => {
       ReasonReact.Router.watchUrl(url => {
         let (path, _hash, _search) = (url.path, url.hash, url.search);
         let fallback: ReasonReact.Router.url = {
-          path: ["register"],
+          path: ["login"],
           hash: "",
           search: "",
         };
@@ -47,7 +47,5 @@ let make = _children => {
         | ListeFormation => <ListeFormation />
         }
       )
-    </div> /*{if (isConnected) {
-               ReasonReact.createElement(<NavBar />);
-             }}*/,
+    </div>,
 };
