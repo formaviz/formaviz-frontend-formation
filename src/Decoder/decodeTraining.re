@@ -108,5 +108,13 @@ let decodeSingleResponse = json =>
     message: json |> optional(field("message", string)),
   };
 
+let decodeSingleCreatedTraining = json =>
+  Json.Decode.{
+    success: json |> optional(field("success", bool)),
+    token: json |> optional(field("token", string)),
+    singleTraining: json |> field("profile", decodeProfile),
+    message: json |> optional(field("message", string)),
+  };
+
 let encodeListLevel = (admLevel: option(list(int))) =>
   admLevel |> Json.Encode.nullable(Json.Encode.list(Json.Encode.int));

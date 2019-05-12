@@ -11,15 +11,15 @@ let component = ReasonReact.statelessComponent("navbar");
 
 let make = _children => {
   ...component /*initialState: () => {},x
-    reducer: (action, _) =>
-      switch (action) {
-      | GoToLogin =>
-        ReasonReact.SideEffects(_ => ReasonReact.Router.push("login"))
-      | GoToRegiser =>
-        ReasonReact.SideEffects(_ => ReasonReact.Router.push("register"))
-      | GoToCreate =>
-        ReasonReact.SideEffects(_ => ReasonReact.Router.push("create"))
-      },*/,
+  reducer: (action, _) =>
+    switch (action) {
+    | GoToLogin =>
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("login"))
+    | GoToRegiser =>
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("register"))
+    | GoToCreate =>
+      ReasonReact.SideEffects(_ => ReasonReact.Router.push("create"))
+    },*/,
   render: _self =>
     <nav className="card navbar navbar-expand-lg" style=navBarCss>
       <div style=logoContainerCSS>
@@ -31,11 +31,6 @@ let make = _children => {
           <li className="nav-item">
             <a className="btn nav-link" style=btnNav href="login">
               (ReasonReact.string("Se connecter "))
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="btn nav-link" style=btnNav href="register">
-              (ReasonReact.string("S'enregister "))
             </a>
           </li>
           <li className="nav-item">

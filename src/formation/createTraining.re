@@ -146,7 +146,7 @@ let make = _children => {
       |> then_(Fetch.Response.json)
       |> then_(json =>
            json
-           |> DecodeRating.decodeResponseSend
+           |> DecodeTraining.decodeSingleCreatedTraining
            |> (resp => Some(resp) |> resolve)
          )
     );
@@ -367,6 +367,8 @@ let make = _children => {
               <input
                 className="form-control"
                 type_="number"
+                min=0
+                max="10"
                 value=_self.state.duration
                 placeholder={js|Durée de la formation|js}
                 onChange=(
