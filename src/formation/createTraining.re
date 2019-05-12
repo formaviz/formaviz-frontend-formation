@@ -146,7 +146,7 @@ let make = _children => {
       |> then_(Fetch.Response.json)
       |> then_(json =>
            json
-           |> DecodeRating.decodeResponseSend
+           |> DecodeTraining.decodeSingleCreatedTraining
            |> (resp => Some(resp) |> resolve)
          )
     );
@@ -304,7 +304,7 @@ let make = _children => {
                     Array.of_list(
                       List.map(
                         level =>
-                          <option value=(string_of_int(level.idLevel))>
+                          <option value=level.title>
                             (ReasonReact.string(level.title))
                           </option>,
                         _self.state.listLevel,
@@ -366,7 +366,9 @@ let make = _children => {
             <div className="input-group mb-3">
               <input
                 className="form-control"
-                type_="text"
+                type_="number"
+                min=0
+                max="10"
                 value=_self.state.duration
                 placeholder={js|Durée de la formation|js}
                 onChange=(
@@ -457,12 +459,6 @@ let make = _children => {
             (ReasonReact.string("Envoyer"))
           </button>
         </div>
-        <label> (ReasonReact.string(_self.state.name)) </label>
-        <label> (ReasonReact.string(_self.state.description)) </label>
-        <label>
-          (ReasonReact.string(string_of_bool(_self.state.partTime)))
-        </label>
-        <label> (ReasonReact.string(_self.state.error)) </label>
       </div>,
   };
 };
